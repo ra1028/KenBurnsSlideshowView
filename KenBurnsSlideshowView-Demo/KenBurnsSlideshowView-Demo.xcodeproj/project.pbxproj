@@ -1,0 +1,439 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2A75FF451A2C4E6200E8BDDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF441A2C4E6200E8BDDB /* AppDelegate.swift */; };
+		2A75FF471A2C4E6200E8BDDB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF461A2C4E6200E8BDDB /* ViewController.swift */; };
+		2A75FF4A1A2C4E6200E8BDDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A75FF481A2C4E6200E8BDDB /* Main.storyboard */; };
+		2A75FF4C1A2C4E6200E8BDDB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A75FF4B1A2C4E6200E8BDDB /* Images.xcassets */; };
+		2A75FF4F1A2C4E6200E8BDDB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A75FF4D1A2C4E6200E8BDDB /* LaunchScreen.xib */; };
+		2A75FF5B1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF5A1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift */; };
+		2A75FF6A1A2C4F0500E8BDDB /* KenBurnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF691A2C4F0500E8BDDB /* KenBurnsView.swift */; };
+		2A75FF6C1A2C7B6300E8BDDB /* SampleImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2A75FF6B1A2C7B6300E8BDDB /* SampleImage.jpg */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2A75FF551A2C4E6200E8BDDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A75FF371A2C4E6200E8BDDB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2A75FF3E1A2C4E6200E8BDDB;
+			remoteInfo = "KenBurnsSlideshowView-Demo";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2A75FF3F1A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KenBurnsSlideshowView-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A75FF431A2C4E6200E8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2A75FF441A2C4E6200E8BDDB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2A75FF461A2C4E6200E8BDDB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2A75FF491A2C4E6200E8BDDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2A75FF4B1A2C4E6200E8BDDB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		2A75FF4E1A2C4E6200E8BDDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		2A75FF541A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "KenBurnsSlideshowView-DemoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A75FF591A2C4E6200E8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2A75FF5A1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KenBurnsSlideshowView_DemoTests.swift; sourceTree = "<group>"; };
+		2A75FF691A2C4F0500E8BDDB /* KenBurnsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KenBurnsView.swift; sourceTree = "<group>"; };
+		2A75FF6B1A2C7B6300E8BDDB /* SampleImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = SampleImage.jpg; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2A75FF3C1A2C4E6200E8BDDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A75FF511A2C4E6200E8BDDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A75FF361A2C4E6200E8BDDB = {
+			isa = PBXGroup;
+			children = (
+				2A75FF681A2C4F0500E8BDDB /* KenBurnsSlideshowView */,
+				2A75FF411A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo */,
+				2A75FF571A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests */,
+				2A75FF401A2C4E6200E8BDDB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2A75FF401A2C4E6200E8BDDB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A75FF3F1A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo.app */,
+				2A75FF541A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A75FF411A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo */ = {
+			isa = PBXGroup;
+			children = (
+				2A75FF441A2C4E6200E8BDDB /* AppDelegate.swift */,
+				2A75FF461A2C4E6200E8BDDB /* ViewController.swift */,
+				2A75FF481A2C4E6200E8BDDB /* Main.storyboard */,
+				2A75FF6B1A2C7B6300E8BDDB /* SampleImage.jpg */,
+				2A75FF4B1A2C4E6200E8BDDB /* Images.xcassets */,
+				2A75FF4D1A2C4E6200E8BDDB /* LaunchScreen.xib */,
+				2A75FF421A2C4E6200E8BDDB /* Supporting Files */,
+			);
+			path = "KenBurnsSlideshowView-Demo";
+			sourceTree = "<group>";
+		};
+		2A75FF421A2C4E6200E8BDDB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2A75FF431A2C4E6200E8BDDB /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2A75FF571A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				2A75FF5A1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift */,
+				2A75FF581A2C4E6200E8BDDB /* Supporting Files */,
+			);
+			path = "KenBurnsSlideshowView-DemoTests";
+			sourceTree = "<group>";
+		};
+		2A75FF581A2C4E6200E8BDDB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2A75FF591A2C4E6200E8BDDB /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2A75FF681A2C4F0500E8BDDB /* KenBurnsSlideshowView */ = {
+			isa = PBXGroup;
+			children = (
+				2A75FF691A2C4F0500E8BDDB /* KenBurnsView.swift */,
+			);
+			name = KenBurnsSlideshowView;
+			path = ../KenBurnsSlideshowView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2A75FF3E1A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A75FF5E1A2C4E6200E8BDDB /* Build configuration list for PBXNativeTarget "KenBurnsSlideshowView-Demo" */;
+			buildPhases = (
+				2A75FF3B1A2C4E6200E8BDDB /* Sources */,
+				2A75FF3C1A2C4E6200E8BDDB /* Frameworks */,
+				2A75FF3D1A2C4E6200E8BDDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "KenBurnsSlideshowView-Demo";
+			productName = "KenBurnsSlideshowView-Demo";
+			productReference = 2A75FF3F1A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2A75FF531A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A75FF611A2C4E6200E8BDDB /* Build configuration list for PBXNativeTarget "KenBurnsSlideshowView-DemoTests" */;
+			buildPhases = (
+				2A75FF501A2C4E6200E8BDDB /* Sources */,
+				2A75FF511A2C4E6200E8BDDB /* Frameworks */,
+				2A75FF521A2C4E6200E8BDDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2A75FF561A2C4E6200E8BDDB /* PBXTargetDependency */,
+			);
+			name = "KenBurnsSlideshowView-DemoTests";
+			productName = "KenBurnsSlideshowView-DemoTests";
+			productReference = 2A75FF541A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A75FF371A2C4E6200E8BDDB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Ryo Aoyama";
+				TargetAttributes = {
+					2A75FF3E1A2C4E6200E8BDDB = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					2A75FF531A2C4E6200E8BDDB = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 2A75FF3E1A2C4E6200E8BDDB;
+					};
+				};
+			};
+			buildConfigurationList = 2A75FF3A1A2C4E6200E8BDDB /* Build configuration list for PBXProject "KenBurnsSlideshowView-Demo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2A75FF361A2C4E6200E8BDDB;
+			productRefGroup = 2A75FF401A2C4E6200E8BDDB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2A75FF3E1A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo */,
+				2A75FF531A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2A75FF3D1A2C4E6200E8BDDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A75FF4A1A2C4E6200E8BDDB /* Main.storyboard in Resources */,
+				2A75FF4F1A2C4E6200E8BDDB /* LaunchScreen.xib in Resources */,
+				2A75FF6C1A2C7B6300E8BDDB /* SampleImage.jpg in Resources */,
+				2A75FF4C1A2C4E6200E8BDDB /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A75FF521A2C4E6200E8BDDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2A75FF3B1A2C4E6200E8BDDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A75FF6A1A2C4F0500E8BDDB /* KenBurnsView.swift in Sources */,
+				2A75FF471A2C4E6200E8BDDB /* ViewController.swift in Sources */,
+				2A75FF451A2C4E6200E8BDDB /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A75FF501A2C4E6200E8BDDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A75FF5B1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2A75FF561A2C4E6200E8BDDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2A75FF3E1A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo */;
+			targetProxy = 2A75FF551A2C4E6200E8BDDB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2A75FF481A2C4E6200E8BDDB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A75FF491A2C4E6200E8BDDB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2A75FF4D1A2C4E6200E8BDDB /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A75FF4E1A2C4E6200E8BDDB /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2A75FF5C1A2C4E6200E8BDDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2A75FF5D1A2C4E6200E8BDDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2A75FF5F1A2C4E6200E8BDDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "KenBurnsSlideshowView-Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2A75FF601A2C4E6200E8BDDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "KenBurnsSlideshowView-Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2A75FF621A2C4E6200E8BDDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "KenBurnsSlideshowView-DemoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KenBurnsSlideshowView-Demo.app/KenBurnsSlideshowView-Demo";
+			};
+			name = Debug;
+		};
+		2A75FF631A2C4E6200E8BDDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "KenBurnsSlideshowView-DemoTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KenBurnsSlideshowView-Demo.app/KenBurnsSlideshowView-Demo";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A75FF3A1A2C4E6200E8BDDB /* Build configuration list for PBXProject "KenBurnsSlideshowView-Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A75FF5C1A2C4E6200E8BDDB /* Debug */,
+				2A75FF5D1A2C4E6200E8BDDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2A75FF5E1A2C4E6200E8BDDB /* Build configuration list for PBXNativeTarget "KenBurnsSlideshowView-Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A75FF5F1A2C4E6200E8BDDB /* Debug */,
+				2A75FF601A2C4E6200E8BDDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		2A75FF611A2C4E6200E8BDDB /* Build configuration list for PBXNativeTarget "KenBurnsSlideshowView-DemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A75FF621A2C4E6200E8BDDB /* Debug */,
+				2A75FF631A2C4E6200E8BDDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A75FF371A2C4E6200E8BDDB /* Project object */;
+}
