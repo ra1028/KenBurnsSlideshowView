@@ -15,6 +15,9 @@
 		2A75FF5B1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF5A1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift */; };
 		2A75FF6A1A2C4F0500E8BDDB /* KenBurnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF691A2C4F0500E8BDDB /* KenBurnsView.swift */; };
 		2A75FF6C1A2C7B6300E8BDDB /* SampleImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2A75FF6B1A2C7B6300E8BDDB /* SampleImage.jpg */; };
+		2A8B16AC1A3635DD007C81C8 /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8B16AB1A3635DD007C81C8 /* Reveal.framework */; };
+		2A8B16AE1A3635FA007C81C8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8B16AD1A3635FA007C81C8 /* CFNetwork.framework */; };
+		2A8B16B01A36364C007C81C8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8B16AF1A36364C007C81C8 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,9 @@
 		2A75FF5A1A2C4E6200E8BDDB /* KenBurnsSlideshowView_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KenBurnsSlideshowView_DemoTests.swift; sourceTree = "<group>"; };
 		2A75FF691A2C4F0500E8BDDB /* KenBurnsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KenBurnsView.swift; sourceTree = "<group>"; };
 		2A75FF6B1A2C7B6300E8BDDB /* SampleImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = SampleImage.jpg; sourceTree = "<group>"; };
+		2A8B16AB1A3635DD007C81C8 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
+		2A8B16AD1A3635FA007C81C8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		2A8B16AF1A36364C007C81C8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +53,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A8B16B01A36364C007C81C8 /* QuartzCore.framework in Frameworks */,
+				2A8B16AE1A3635FA007C81C8 /* CFNetwork.framework in Frameworks */,
+				2A8B16AC1A3635DD007C81C8 /* Reveal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +72,9 @@
 		2A75FF361A2C4E6200E8BDDB = {
 			isa = PBXGroup;
 			children = (
+				2A8B16AF1A36364C007C81C8 /* QuartzCore.framework */,
+				2A8B16AD1A3635FA007C81C8 /* CFNetwork.framework */,
+				2A8B16AB1A3635DD007C81C8 /* Reveal.framework */,
 				2A75FF681A2C4F0500E8BDDB /* KenBurnsSlideshowView */,
 				2A75FF411A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo */,
 				2A75FF571A2C4E6200E8BDDB /* KenBurnsSlideshowView-DemoTests */,
@@ -353,9 +365,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "KenBurnsSlideshowView-Demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -364,9 +386,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "KenBurnsSlideshowView-Demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -378,6 +410,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -397,6 +430,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "KenBurnsSlideshowView-DemoTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -424,6 +458,7 @@
 				2A75FF601A2C4E6200E8BDDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2A75FF611A2C4E6200E8BDDB /* Build configuration list for PBXNativeTarget "KenBurnsSlideshowView-DemoTests" */ = {
 			isa = XCConfigurationList;
@@ -432,6 +467,7 @@
 				2A75FF631A2C4E6200E8BDDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

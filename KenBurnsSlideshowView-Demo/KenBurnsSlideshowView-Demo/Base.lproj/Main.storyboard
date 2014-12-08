@@ -34,10 +34,10 @@
                                 <exclude reference="ta0-YQ-Zc1"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="LrG-65-zSr"/>
                                 <exclude reference="LWz-eb-dpy"/>
                                 <exclude reference="TD3-K6-xBF"/>
                                 <exclude reference="bVH-e7-3mW"/>
-                                <exclude reference="LrG-65-zSr"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -45,10 +45,10 @@
                                 <include reference="ta0-YQ-Zc1"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="LrG-65-zSr"/>
                                 <include reference="LWz-eb-dpy"/>
                                 <include reference="TD3-K6-xBF"/>
                                 <include reference="bVH-e7-3mW"/>
-                                <include reference="LrG-65-zSr"/>
                             </mask>
                         </variation>
                     </view>
