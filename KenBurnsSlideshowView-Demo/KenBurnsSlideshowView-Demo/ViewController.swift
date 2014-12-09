@@ -14,12 +14,27 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.kenBurnsView.image = UIImage(named: "SampleImage.jpg")
+        self.kenBurnsView.image = UIImage(named: "SampleImage.jpg")
+        let longPress = UILongPressGestureRecognizer(target: self, action: "pauseKenBurnsView:")
+        self.kenBurnsView.addGestureRecognizer(longPress)
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        self.kenBurnsView.image = UIImage(named: "SampleImage.jpg")
+    func pauseKenBurnsView(sender: UIGestureRecognizer) {
+//        if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Animating {
+//            self.kenBurnsView.pauseMotion()
+//        }else if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Pausing {
+//            self.kenBurnsView.resumeMotion()
+//        }
+        switch sender.state {
+        case .Began:
+            self.kenBurnsView.showWholeImage()
+        case .Cancelled:
+            fallthrough
+        case .Ended:
+            self.kenBurnsView.zoomImageAndRestartMotion()
+        default:
+            break
+        }
     }
     
     @IBAction func slider(sender: UISlider) {
