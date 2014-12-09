@@ -25,10 +25,16 @@ class KenBurnsView: UIView {
         case UpperRight
     }
     
-    private var imageView: KenBurnsImageView!
+    private var imageView: UIImageView!
     var image: UIImage? {
         set {
+            let duration = self.imageView.image == nil ? 0.7 : 0
             self.imageView.image = newValue
+            UIView.animateWithDuration(duration, delay: 0, options: .BeginFromCurrentState | .CurveEaseInOut, animations: { () -> Void in
+                self.alpha = 0
+                self.alpha = 1.0
+                }, completion: nil)
+            
             if newValue != nil {
                 self.setUpImageViewRect(newValue)
                 self.setUpTransform()
@@ -39,6 +45,7 @@ class KenBurnsView: UIView {
             return self.imageView.image
         }
     }
+    
     var zoomCourse: kenBurnsImageViewZoomCourse = .Random
     var startZoomRate: CGFloat = 1.2
     var endZoomRate: CGFloat = 1.4
@@ -58,12 +65,23 @@ class KenBurnsView: UIView {
     }
     
     func startMotion() {
+        let current = CAShapeLayer()
+        
         let transX = CABasicAnimation(keyPath: "transform.translation.x")
-        let transY = CABasicAnimation(keyPath: "transform.translation.y")
         transX.fromValue = self.startTransform.tx
         transX.toValue = self.endTransform.tx
+        
+        let transY = CABasicAnimation(keyPath: "transform.translation.y")
         transY.fromValue = self.startTransform.ty
         transY.toValue = self.endTransform.ty
+        
+        let scaleX = CABasicAnimation(keyPath: "transform.scale.x")
+        scaleX.fromValue = self.startTransform.a
+        scaleX.toValue = self.endTransform.a
+        
+        let scaleY = CABasicAnimation(keyPath: "transform.scale.y")
+        scaleY.fromValue = self.startTransform.d
+        scaleY.toValue = self.endTransform.d
         
         let group = CAAnimationGroup()
         group.repeatCount = Float.infinity
@@ -71,7 +89,7 @@ class KenBurnsView: UIView {
         group.duration = CFTimeInterval(self.animationDuration)
         group.removedOnCompletion = false
         group.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
-        group.animations = [transX, transY]
+        group.animations = [transX, transY, scaleX, scaleY]
         
         self.imageView.layer.addAnimation(group, forKey: "kenBurnsAnimation")
     }
@@ -85,17 +103,18 @@ class KenBurnsView: UIView {
         self.autoresizesSubviews = true
         self.backgroundColor = UIColor.blackColor()
         
-        self.imageView = KenBurnsImageView(frame: self.bounds)
+        self.imageView = UIImageView(frame: self.bounds)
+        self.imageView.contentMode = .ScaleAspectFill
+        self.imageView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         self.insertSubview(self.imageView, atIndex: 0)
     }
     
     private func setUpImageViewRect(image: UIImage!) {
         let size = image.size
         var longSide: CGFloat = max(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds))
-        var imageShortSide: CGFloat = min(size.width, size.height)
-        var ratio: CGFloat = longSide / imageShortSide
+        var imageLongSide: CGFloat = max(size.width, size.height)
+        var ratio: CGFloat = longSide / imageLongSide
         var resizedSize = CGSizeMake(size.width * ratio, size.height * ratio)
-        self.imageView.transform = CGAffineTransformIdentity
         self.imageView.frame.size = resizedSize
     }
     
@@ -128,25 +147,25 @@ class KenBurnsView: UIView {
             break
         }
         
-        self.startTransform = self.translatesAndScaledTransform(startRect, originalRect: self.imageView.bounds)
-        self.endTransform = self.translatesAndScaledTransform(endRect, originalRect: self.imageView.bounds)
+        self.startTransform = self.translatesAndScaledTransform(startRect)
+        self.endTransform = self.translatesAndScaledTransform(endRect)
     }
     
-    private func translatesAndScaledTransform(rect: CGRect, originalRect: CGRect) -> CGAffineTransform {
-        let scaleRate = CGSizeMake(CGRectGetWidth(rect) / CGRectGetWidth(originalRect), CGRectGetHeight(rect) / CGRectGetHeight(originalRect))
-        let offset = CGPointMake(CGRectGetMidX(rect) - CGRectGetMidX(originalRect), CGRectGetMidY(rect) - CGRectGetMidY(originalRect))
-        let scale = CGAffineTransformMakeScale(scaleRate.width, scaleRate.height)
-        let translates = CGAffineTransformMakeTranslation(offset.x, offset.y)
-        return CGAffineTransformConcat(scale, translates)
+    private func translatesAndScaledTransform(rect: CGRect) -> CGAffineTransform {
+        let imageViewSize = self.imageView.bounds.size
+        
+        let scale = CGAffineTransformMakeScale(CGRectGetWidth(rect) / imageViewSize.width, CGRectGetHeight(rect) / imageViewSize.height)
+        let translation = CGAffineTransformMakeTranslation(CGRectGetMidX(rect) - CGRectGetMidX(self.imageView.bounds), CGRectGetMidY(rect) - CGRectGetMidY(self.imageView.bounds))
+        return CGAffineTransformConcat(scale, translation)
     }
     
     private func computeZoomRect(zoomPoint: kenBurnsImageViewStartZoomPoint, zoomRate: CGFloat) -> CGRect {
         let imageViewSize = self.imageView.bounds.size
-        var zoomSize = CGSizeMake(imageViewSize.width * zoomRate, imageViewSize.height * zoomRate)
+        let zoomSize = CGSizeMake(imageViewSize.width * zoomRate, imageViewSize.height * zoomRate)
         var point = CGPointZero
         
-        var x = -(fabs(zoomSize.width - CGRectGetWidth(self.bounds)))
-        var y = -(fabs(zoomSize.height - CGRectGetHeight(self.bounds)))
+        var x = -fabs(zoomSize.width - CGRectGetWidth(self.bounds))
+        var y = -fabs(zoomSize.height - CGRectGetHeight(self.bounds))
         
         switch zoomPoint {
         case .LowerLeft:
@@ -162,31 +181,6 @@ class KenBurnsView: UIView {
         var zoomRect: CGRect = CGRectMake(point.x, point.y, zoomSize.width, zoomSize.height)
         let pad = self.padding
         var insets = UIEdgeInsetsMake(-pad.top, -pad.left, -pad.bottom, -pad.right)
-        
         return UIEdgeInsetsInsetRect(zoomRect, insets)
-    }
-}
-
-class KenBurnsImageView: UIImageView {
-    
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.autoresizingMask = .FlexibleWidth | .FlexibleHeight
-        self.contentMode = .ScaleAspectFill
-    }
-    
-    override var image: UIImage? {
-        willSet {
-            if self.image == nil {
-                UIView.animateWithDuration(0.7, delay: 0, options: .BeginFromCurrentState | .CurveEaseInOut, animations: { () -> Void in
-                    self.alpha = 0
-                    self.alpha = 1.0
-                }, completion: nil)
-            }
-        }
     }
 }
