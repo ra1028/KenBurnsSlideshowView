@@ -10,21 +10,32 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var kenBurnsView: KenBurnsView!
-    @IBOutlet weak var bottomConst: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.kenBurnsView.image = UIImage(named: "SampleImage.jpg")
-        let longPress = UILongPressGestureRecognizer(target: self, action: "pauseKenBurnsView:")
+        self.kenBurnsView.image = UIImage(named: "SampleImage1.jpg")
+//        self.kenBurnsView.image = UIImage(named: "SampleImage2.jpg")
+        let tap = UITapGestureRecognizer(target: self, action: "pauseKenBurnsView:")
+        let longPress = UILongPressGestureRecognizer(target: self, action: "showWholeImage:")
+        tap.requireGestureRecognizerToFail(longPress)
+        self.kenBurnsView.addGestureRecognizer(tap)
         self.kenBurnsView.addGestureRecognizer(longPress)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.kenBurnsView.updateImageViewSize()
+    }
+    
     func pauseKenBurnsView(sender: UIGestureRecognizer) {
-//        if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Animating {
-//            self.kenBurnsView.pauseMotion()
-//        }else if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Pausing {
-//            self.kenBurnsView.resumeMotion()
-//        }
+        if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Animating {
+            self.kenBurnsView.pauseMotion()
+        }else if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Pausing {
+            self.kenBurnsView.resumeMotion()
+        }
+    }
+    
+    func showWholeImage(sender: UIGestureRecognizer) {
         switch sender.state {
         case .Began:
             self.kenBurnsView.showWholeImage()
@@ -35,11 +46,6 @@ class ViewController: UIViewController {
         default:
             break
         }
-    }
-    
-    @IBAction func slider(sender: UISlider) {
-        let value = 100 + CGFloat(sender.value * 200)
-        self.bottomConst.constant = value
     }
 }
 

@@ -21,60 +21,40 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Ayk-XS-PRa">
-                                <rect key="frame" x="0.0" y="-15" width="118" height="31"/>
-                                <connections>
-                                    <action selector="slider:" destination="vXZ-lx-hvc" eventType="valueChanged" id="nAg-Qx-bRv"/>
-                                </connections>
-                            </slider>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Ayk-XS-PRa" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="16" id="Izh-dg-sin"/>
-                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="Ayk-XS-PRa" secondAttribute="bottom" constant="36" id="JMu-nZ-CSA">
-                                <variation key="widthClass=compact" constant="40"/>
-                            </constraint>
                             <constraint firstItem="ta0-YQ-Zc1" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="LWz-eb-dpy"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="ta0-YQ-Zc1" secondAttribute="bottom" id="LrG-65-zSr">
-                                <variation key="widthClass=compact" constant="100"/>
+                                <variation key="widthClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstAttribute="trailing" secondItem="ta0-YQ-Zc1" secondAttribute="trailing" id="TD3-K6-xBF"/>
-                            <constraint firstAttribute="trailing" secondItem="Ayk-XS-PRa" secondAttribute="trailing" constant="16" id="Yly-9b-gTc"/>
                             <constraint firstItem="ta0-YQ-Zc1" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="bVH-e7-3mW"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="ta0-YQ-Zc1"/>
-                                <exclude reference="Ayk-XS-PRa"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="LrG-65-zSr"/>
                                 <exclude reference="LWz-eb-dpy"/>
                                 <exclude reference="TD3-K6-xBF"/>
                                 <exclude reference="bVH-e7-3mW"/>
-                                <exclude reference="Izh-dg-sin"/>
-                                <exclude reference="Yly-9b-gTc"/>
-                                <exclude reference="JMu-nZ-CSA"/>
-                                <exclude reference="LrG-65-zSr"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="ta0-YQ-Zc1"/>
-                                <include reference="Ayk-XS-PRa"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="LrG-65-zSr"/>
                                 <include reference="LWz-eb-dpy"/>
                                 <include reference="TD3-K6-xBF"/>
                                 <include reference="bVH-e7-3mW"/>
-                                <include reference="Izh-dg-sin"/>
-                                <include reference="Yly-9b-gTc"/>
-                                <include reference="JMu-nZ-CSA"/>
-                                <include reference="LrG-65-zSr"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="bottomConst" destination="LrG-65-zSr" id="Rzp-zU-peU"/>
                         <outlet property="kenBurnsView" destination="ta0-YQ-Zc1" id="WjL-ie-uad"/>
                     </connections>
                 </viewController>

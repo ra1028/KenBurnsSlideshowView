@@ -22,6 +22,7 @@ class KenBurnsView: UIView {
         case Animating
         case Invalid
         case Pausing
+        case WholeImage
     }
     
     private enum kenBurnsViewStartZoomPoint {
@@ -30,6 +31,10 @@ class KenBurnsView: UIView {
         case UpperLeft
         case UpperRight
     }
+    
+    /**
+    *   properties
+    **/
     
     private var imageView: UIImageView!
     private var wholeImageView: UIImageView!
@@ -82,14 +87,31 @@ class KenBurnsView: UIView {
     private var startTransform: CGAffineTransform = CGAffineTransformIdentity
     private var endTransform: CGAffineTransform = CGAffineTransformIdentity
     
+    /**
+    *   initialize methods
+    **/
+    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.configureView()
+        self.configure()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.configureView()
+        self.configure()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    /**
+    *   public methods
+    **/
+    
+    func updateImageViewSize() {
+        self.setUpImageViewRect(self.imageView.image)
+        self.updateMotion()
     }
     
     func startMotion() {
@@ -119,8 +141,8 @@ class KenBurnsView: UIView {
         group.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
         group.animations = [transX, transY, scaleX, scaleY]
         
-        self.imageView.layer.addAnimation(group, forKey: "kenBurnsAnimation")
-        self.state = .Animating 
+        self.imageView.layer.addAnimation(group, forKey: "kenBurnsEffects")
+        self.state = .Animating
     }
     
     func updateMotion() {
@@ -155,38 +177,87 @@ class KenBurnsView: UIView {
         }
     }
     
+    func resumeMotionWithMomentDelay() {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(NSEC_PER_SEC) * 0.1)), dispatch_get_main_queue()) { () -> Void in
+            self.resumeMotion()
+        }
+    }
+    
     func showWholeImage() {
-        self.pauseMotion()
-        
-        let layer: AnyObject? = self.imageView.layer.presentationLayer()
-        self.wholeImageView.frame = layer!.frame
-        self.wholeImageView.hidden = false
-        self.imageView.hidden = true
-        
-        let size = self.bounds.size
-        let imageSize = self.imageView.bounds.size
-        let widthRatio = size.width / imageSize.width
-        let heightRatio = size.height / imageSize.height
-        var rate: CGFloat = min(widthRatio, heightRatio)
-        let resizedSize = CGSizeMake(imageSize.width * rate, imageSize.height * rate)
-        
-        UIView.animateWithDuration(0.3, delay: 0, options: .CurveLinear, animations: { () -> Void in
-            self.wholeImageView.frame.size = resizedSize
-            self.wholeImageView.center = self.center
-        }, completion: nil)
+        let layer: CALayer? = self.imageView.layer.presentationLayer() as? CALayer
+        if layer != nil {
+            self.pauseMotion()
+            
+            self.wholeImageView.frame = layer!.frame
+            self.wholeImageView.hidden = false
+            self.imageView.hidden = true
+            
+            let size = self.bounds.size
+            let imageSize = self.imageView.bounds.size
+            let aspect = size.width / size.height
+            let imageAspect = imageSize.width / imageSize.height
+            let rate = imageAspect >= aspect ? size.width / imageSize.width : size.height / imageSize.height
+            let resizedSize = CGSizeMake(imageSize.width * rate, imageSize.height * rate)
+            
+            let center = self.center
+            let times = [0, 0.6, 0.8, 1]
+            let timings = [CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear),
+                CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut),
+                CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)]
+            
+            var pos = CAKeyframeAnimation(keyPath: "position")
+            pos.values = [NSValue(CGPoint: self.wholeImageView.center), NSValue(CGPoint: center), NSValue(CGPoint: center), NSValue(CGPoint: center)]
+            pos.keyTimes = times
+            pos.timingFunctions = timings
+            
+            var wholeSize = CAKeyframeAnimation(keyPath: "bounds.size")
+            wholeSize.values = [NSValue(CGSize: self.wholeImageView.bounds.size), NSValue(CGSize: resizedSize),
+                NSValue(CGSize: CGSizeApplyAffineTransform(resizedSize, CGAffineTransformMakeScale(1.05, 1.05))), NSValue(CGSize: resizedSize)]
+            wholeSize.keyTimes = times
+            wholeSize.timingFunctions = timings
+            
+            let group = CAAnimationGroup()
+            group.duration = 0.5
+            group.removedOnCompletion = false
+            group.fillMode = kCAFillModeForwards
+            group.animations = [pos, wholeSize]
+            group.delegate = self
+            
+            self.wholeImageView.layer.addAnimation(group, forKey: "showWholeImage")
+        }
     }
     
     func zoomImageAndRestartMotion() {
-        let layer: AnyObject? = self.imageView.layer.presentationLayer()
+        let layer: CALayer? = self.imageView.layer.presentationLayer() as? CALayer
         
-        UIView.animateWithDuration(0.3, delay: 0, options: .BeginFromCurrentState | .CurveEaseIn, animations: { () -> Void in
-            self.wholeImageView.frame = layer!.frame
-        }) { (finished) -> Void in
-            self.imageView.hidden = false
-            self.wholeImageView.hidden = true
-            self.wholeImageView.frame = CGRectZero
-            self.resumeMotion()
+        if layer != nil {
+            let delay: Double = self.state == .WholeImage ? 0.2 : 0
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                let pos = CABasicAnimation(keyPath: "position")
+                pos.toValue = NSValue(CGPoint: CGPointMake(CGRectGetMinX(layer!.frame) + (CGRectGetWidth(layer!.frame) / 2), CGRectGetMinY(layer!.frame) + (CGRectGetHeight(layer!.frame) / 2)))
+                
+                let size = CABasicAnimation(keyPath: "bounds.size")
+                size.toValue = NSValue(CGSize: layer!.frame.size)
+                
+                let group = CAAnimationGroup()
+                group.duration = 0.3
+                group.removedOnCompletion = false
+                group.fillMode = kCAFillModeForwards
+                group.animations = [pos, size]
+                group.delegate = self
+                
+                self.wholeImageView.layer.addAnimation(group, forKey: "zoomImage")
+            })
         }
+    }
+    
+    /**
+    *   private methods
+    **/
+    
+    private func configure() {
+        self.configureView()
+        self.configureNotification()
     }
     
     private func configureView() {
@@ -194,28 +265,33 @@ class KenBurnsView: UIView {
         self.backgroundColor = UIColor.blackColor()
         
         self.imageView = UIImageView(frame: self.bounds)
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.imageView.contentMode = UIViewContentMode.ScaleAspectFit
-//        self.imageView.autoresizingMask = .FlexibleHeight | .FlexibleWidth
+        self.imageView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.imageView.contentMode = .ScaleAspectFill
         self.imageView.clipsToBounds = true
         self.insertSubview(self.imageView, atIndex: 0)
         
         self.wholeImageView = UIImageView()
+        self.wholeImageView.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.wholeImageView.contentMode = .ScaleAspectFill
         self.wholeImageView.clipsToBounds = true
         self.wholeImageView.hidden = true
         self.insertSubview(self.wholeImageView, atIndex: 0)
     }
     
-    private func setUpImageViewRect(image: UIImage!) {
-        let size = self.bounds.size
-        let imageSize = image.size
-        let widthRatio = size.width / imageSize.width
-        let heightRatio = size.height / imageSize.height
-        var rate: CGFloat = max(widthRatio, heightRatio)
-
-        var resizedSize = CGSizeMake(imageSize.width * rate, imageSize.height * rate)
-        self.imageView.frame.size = resizedSize
+    private func configureNotification() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "pauseMotion", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "resumeMotionWithMomentDelay", name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    private func setUpImageViewRect(image: UIImage?) {
+        if image != nil {
+            let size = self.bounds.size
+            let imageSize = image!.size
+            let aspect = size.width / size.height
+            let imageAspect = imageSize.width / imageSize.height
+            let rate = imageAspect >= aspect ? size.height / imageSize.height : size.width / imageSize.width
+            var resizedSize = CGSizeMake(imageSize.width * rate, imageSize.height * rate)
+            self.imageView.frame.size = resizedSize
+        }
     }
     
     private func setUpTransform() {
@@ -260,12 +336,13 @@ class KenBurnsView: UIView {
     }
     
     private func computeZoomRect(zoomPoint: kenBurnsViewStartZoomPoint, zoomRate: CGFloat) -> CGRect {
+        let size = self.bounds.size
         let imageViewSize = self.imageView.bounds.size
         let zoomSize = CGSizeMake(imageViewSize.width * zoomRate, imageViewSize.height * zoomRate)
         var point = CGPointZero
         
-        var x = -fabs(zoomSize.width - CGRectGetWidth(self.bounds))
-        var y = -fabs(zoomSize.height - CGRectGetHeight(self.bounds))
+        var x = size.width - zoomSize.width
+        var y = size.height - zoomSize.height
         
         switch zoomPoint {
         case .LowerLeft:
@@ -282,5 +359,20 @@ class KenBurnsView: UIView {
         let pad = self.padding
         var insets = UIEdgeInsetsMake(-pad.top, -pad.left, -pad.bottom, -pad.right)
         return UIEdgeInsetsInsetRect(zoomRect, insets)
+    }
+    
+    /**
+    *   delegate methods
+    **/
+    
+    override func animationDidStop(anim: CAAnimation!, finished flag: Bool) {
+        if anim == self.wholeImageView.layer.animationForKey("showWholeImage") {
+//            self.state = .WholeImage
+        }else if anim == self.wholeImageView.layer.animationForKey("zoomImage") {
+            self.imageView.hidden = false
+            self.wholeImageView.hidden = true
+            self.wholeImageView.frame = CGRectZero
+            self.resumeMotion()
+        }
     }
 }
