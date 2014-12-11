@@ -11,28 +11,14 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var kenBurnsView: KenBurnsView!
     
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.kenBurnsView.image = UIImage(named: "SampleImage1.jpg")
-//        self.kenBurnsView.image = UIImage(named: "SampleImage2.jpg")
-        let tap = UITapGestureRecognizer(target: self, action: "pauseKenBurnsView:")
         let longPress = UILongPressGestureRecognizer(target: self, action: "showWholeImage:")
-        tap.requireGestureRecognizerToFail(longPress)
-        self.kenBurnsView.addGestureRecognizer(tap)
+        longPress.minimumPressDuration = 0.2
         self.kenBurnsView.addGestureRecognizer(longPress)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        self.kenBurnsView.updateImageViewSize()
-    }
-    
-    func pauseKenBurnsView(sender: UIGestureRecognizer) {
-        if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Animating {
-            self.kenBurnsView.pauseMotion()
-        }else if self.kenBurnsView.state == KenBurnsView.kenBurnsViewState.Pausing {
-            self.kenBurnsView.resumeMotion()
-        }
     }
     
     func showWholeImage(sender: UIGestureRecognizer) {
@@ -46,6 +32,12 @@ class ViewController: UIViewController {
         default:
             break
         }
+    }
+    
+    @IBAction func buttonHandler(sender: UIButton) {
+        var imageName = "SampleImage"
+        imageName += sender.titleLabel!.text! + ".jpg"
+        self.kenBurnsView.image = UIImage(named: imageName)
     }
 }
 

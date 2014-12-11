@@ -41,13 +41,22 @@ class KenBurnsView: UIView {
     
     var image: UIImage? {
         set {
-            let duration = self.imageView.image == nil ? 0.7 : 0
+            self.imageView.transform = CGAffineTransformIdentity
+            self.imageView.layer.removeAllAnimations()
+            
+            let oldImage = self.imageView.image
             self.imageView.image = newValue
             self.wholeImageView.image = newValue
-            UIView.animateWithDuration(duration, delay: 0, options: .BeginFromCurrentState | .CurveEaseInOut, animations: { () -> Void in
-                self.alpha = 0
-                self.alpha = 1.0
-                }, completion: nil)
+            
+            if oldImage == nil {
+                let fade = { () -> Void in
+                    self.alpha = 0
+                    self.alpha = 1.0
+                }
+                UIView.animateWithDuration(0.7, delay: 0,
+                    options: .BeginFromCurrentState | .CurveEaseInOut,
+                    animations: fade, completion: nil)
+            }
             
             if newValue != nil {
                 self.setUpImageViewRect(newValue)
@@ -55,8 +64,16 @@ class KenBurnsView: UIView {
                 self.startMotion()
             }
         }
+        
         get {
             return self.imageView.image
+        }
+    }
+    
+    override var bounds: CGRect {
+        didSet {
+            self.setUpImageViewRect(self.image)
+            self.updateMotion()
         }
     }
     
@@ -108,11 +125,6 @@ class KenBurnsView: UIView {
     /**
     *   public methods
     **/
-    
-    func updateImageViewSize() {
-        self.setUpImageViewRect(self.imageView.image)
-        self.updateMotion()
-    }
     
     func startMotion() {
         let current = CAShapeLayer()
@@ -211,8 +223,10 @@ class KenBurnsView: UIView {
             pos.timingFunctions = timings
             
             var wholeSize = CAKeyframeAnimation(keyPath: "bounds.size")
-            wholeSize.values = [NSValue(CGSize: self.wholeImageView.bounds.size), NSValue(CGSize: resizedSize),
-                NSValue(CGSize: CGSizeApplyAffineTransform(resizedSize, CGAffineTransformMakeScale(1.05, 1.05))), NSValue(CGSize: resizedSize)]
+            wholeSize.values = [NSValue(CGSize: self.wholeImageView.frame.size),
+                NSValue(CGSize: resizedSize),
+                NSValue(CGSize: CGSizeApplyAffineTransform(resizedSize, CGAffineTransformMakeScale(1.05, 1.05))),
+                NSValue(CGSize: resizedSize)]
             wholeSize.keyTimes = times
             wholeSize.timingFunctions = timings
             
@@ -221,7 +235,6 @@ class KenBurnsView: UIView {
             group.removedOnCompletion = false
             group.fillMode = kCAFillModeForwards
             group.animations = [pos, wholeSize]
-            group.delegate = self
             
             self.wholeImageView.layer.addAnimation(group, forKey: "showWholeImage")
         }
@@ -231,23 +244,20 @@ class KenBurnsView: UIView {
         let layer: CALayer? = self.imageView.layer.presentationLayer() as? CALayer
         
         if layer != nil {
-            let delay: Double = self.state == .WholeImage ? 0.2 : 0
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                let pos = CABasicAnimation(keyPath: "position")
-                pos.toValue = NSValue(CGPoint: CGPointMake(CGRectGetMinX(layer!.frame) + (CGRectGetWidth(layer!.frame) / 2), CGRectGetMinY(layer!.frame) + (CGRectGetHeight(layer!.frame) / 2)))
-                
-                let size = CABasicAnimation(keyPath: "bounds.size")
-                size.toValue = NSValue(CGSize: layer!.frame.size)
-                
-                let group = CAAnimationGroup()
-                group.duration = 0.3
-                group.removedOnCompletion = false
-                group.fillMode = kCAFillModeForwards
-                group.animations = [pos, size]
-                group.delegate = self
-                
-                self.wholeImageView.layer.addAnimation(group, forKey: "zoomImage")
-            })
+            let pos = CABasicAnimation(keyPath: "position")
+            pos.toValue = NSValue(CGPoint: CGPointMake(CGRectGetMinX(layer!.frame) + (CGRectGetWidth(layer!.frame) / 2), CGRectGetMinY(layer!.frame) + (CGRectGetHeight(layer!.frame) / 2)))
+            
+            let size = CABasicAnimation(keyPath: "bounds.size")
+            size.toValue = NSValue(CGSize: layer!.frame.size)
+            
+            let group = CAAnimationGroup()
+            group.duration = 0.25
+            group.removedOnCompletion = false
+            group.fillMode = kCAFillModeForwards
+            group.animations = [pos, size]
+            group.delegate = self
+            
+            self.wholeImageView.layer.addAnimation(group, forKey: "zoomImage")
         }
     }
     
@@ -262,35 +272,42 @@ class KenBurnsView: UIView {
     
     private func configureView() {
         self.clipsToBounds = true
+        self.contentMode = .ScaleAspectFit
         self.backgroundColor = UIColor.blackColor()
         
-        self.imageView = UIImageView(frame: self.bounds)
-        self.imageView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.imageView.contentMode = .ScaleAspectFill
+        self.imageView = UIImageView()
         self.imageView.clipsToBounds = true
+        self.imageView.contentMode = .ScaleAspectFill
         self.insertSubview(self.imageView, atIndex: 0)
         
         self.wholeImageView = UIImageView()
-        self.wholeImageView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.wholeImageView.contentMode = .ScaleAspectFill
         self.wholeImageView.clipsToBounds = true
         self.wholeImageView.hidden = true
         self.insertSubview(self.wholeImageView, atIndex: 0)
     }
     
     private func configureNotification() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "pauseMotion", name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "resumeMotionWithMomentDelay", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "pauseMotion",
+            name: "UIApplicationSuspendedNotification",
+            object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "resumeMotionWithMomentDelay",
+            name: UIApplicationDidBecomeActiveNotification,
+            object: nil)
     }
+    
     private func setUpImageViewRect(image: UIImage?) {
         if image != nil {
             let size = self.bounds.size
             let imageSize = image!.size
-            let aspect = size.width / size.height
-            let imageAspect = imageSize.width / imageSize.height
-            let rate = imageAspect >= aspect ? size.height / imageSize.height : size.width / imageSize.width
-            var resizedSize = CGSizeMake(imageSize.width * rate, imageSize.height * rate)
-            self.imageView.frame.size = resizedSize
+            if imageSize.width != 0 && imageSize.height != 0 {
+                let aspect = size.width / size.height
+                let imageAspect = imageSize.width / imageSize.height
+                let rate = imageAspect >= aspect ? size.height / imageSize.height : size.width / imageSize.width
+                var resizedSize = CGSizeMake(imageSize.width * rate, imageSize.height * rate)
+                self.imageView.frame.size = resizedSize
+            }
         }
     }
     
@@ -332,6 +349,7 @@ class KenBurnsView: UIView {
         
         let scale = CGAffineTransformMakeScale(CGRectGetWidth(rect) / imageViewSize.width, CGRectGetHeight(rect) / imageViewSize.height)
         let translation = CGAffineTransformMakeTranslation(CGRectGetMidX(rect) - CGRectGetMidX(self.imageView.bounds), CGRectGetMidY(rect) - CGRectGetMidY(self.imageView.bounds))
+        
         return CGAffineTransformConcat(scale, translation)
     }
     
@@ -366,9 +384,7 @@ class KenBurnsView: UIView {
     **/
     
     override func animationDidStop(anim: CAAnimation!, finished flag: Bool) {
-        if anim == self.wholeImageView.layer.animationForKey("showWholeImage") {
-//            self.state = .WholeImage
-        }else if anim == self.wholeImageView.layer.animationForKey("zoomImage") {
+        if anim == self.wholeImageView?.layer.animationForKey("zoomImage") {
             self.imageView.hidden = false
             self.wholeImageView.hidden = true
             self.wholeImageView.frame = CGRectZero

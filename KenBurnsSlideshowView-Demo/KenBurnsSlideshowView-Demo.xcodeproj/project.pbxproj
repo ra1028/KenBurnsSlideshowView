@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A1EFAED1A3808880051F82F /* SampleImage2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2A1EFAEC1A3808880051F82F /* SampleImage2.jpg */; };
+		2A37A7C41A3A396C00D2940B /* SampleImage3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2A37A7C31A3A396C00D2940B /* SampleImage3.jpg */; };
 		2A75FF451A2C4E6200E8BDDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF441A2C4E6200E8BDDB /* AppDelegate.swift */; };
 		2A75FF471A2C4E6200E8BDDB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A75FF461A2C4E6200E8BDDB /* ViewController.swift */; };
 		2A75FF4A1A2C4E6200E8BDDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A75FF481A2C4E6200E8BDDB /* Main.storyboard */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		2A1EFAEC1A3808880051F82F /* SampleImage2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = SampleImage2.jpg; sourceTree = "<group>"; };
+		2A37A7C31A3A396C00D2940B /* SampleImage3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = SampleImage3.jpg; sourceTree = "<group>"; };
 		2A75FF3F1A2C4E6200E8BDDB /* KenBurnsSlideshowView-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KenBurnsSlideshowView-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A75FF431A2C4E6200E8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2A75FF441A2C4E6200E8BDDB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				2A75FF481A2C4E6200E8BDDB /* Main.storyboard */,
 				2A75FF6B1A2C7B6300E8BDDB /* SampleImage1.jpg */,
 				2A1EFAEC1A3808880051F82F /* SampleImage2.jpg */,
+				2A37A7C31A3A396C00D2940B /* SampleImage3.jpg */,
 				2A75FF4B1A2C4E6200E8BDDB /* Images.xcassets */,
 				2A75FF4D1A2C4E6200E8BDDB /* LaunchScreen.xib */,
 				2A75FF421A2C4E6200E8BDDB /* Supporting Files */,
@@ -223,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A75FF4A1A2C4E6200E8BDDB /* Main.storyboard in Resources */,
+				2A37A7C41A3A396C00D2940B /* SampleImage3.jpg in Resources */,
 				2A75FF4F1A2C4E6200E8BDDB /* LaunchScreen.xib in Resources */,
 				2A75FF6C1A2C7B6300E8BDDB /* SampleImage1.jpg in Resources */,
 				2A1EFAED1A3808880051F82F /* SampleImage2.jpg in Resources */,
