@@ -50,11 +50,11 @@ class KenBurnsView: UIView {
             
             if oldImage == nil {
                 let fade = { () -> Void in
-                    self.alpha = 0
-                    self.alpha = 1.0
+                    self.imageView.alpha = 0
+                    self.imageView.alpha = 1.0
                 }
-                UIView.animateWithDuration(0.7, delay: 0,
-                    options: .BeginFromCurrentState | .CurveEaseInOut,
+                UIView.animateWithDuration(0.5, delay: 0,
+                    options: .CurveEaseInOut,
                     animations: fade, completion: nil)
             }
             
@@ -203,6 +203,10 @@ class KenBurnsView: UIView {
             self.wholeImageView.frame = layer!.frame
             self.wholeImageView.hidden = false
             self.imageView.hidden = true
+            UIView.animateWithDuration(0, animations: { () -> Void in
+                self.imageView.alpha = 0
+                self.imageView.alpha = 1.0 // for kill fade animation
+            })
             
             let size = self.bounds.size
             let imageSize = self.imageView.bounds.size
@@ -289,7 +293,7 @@ class KenBurnsView: UIView {
     private func configureNotification() {
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "pauseMotion",
-            name: "UIApplicationSuspendedNotification",
+            name: UIApplicationDidEnterBackgroundNotification,
             object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "resumeMotionWithMomentDelay",

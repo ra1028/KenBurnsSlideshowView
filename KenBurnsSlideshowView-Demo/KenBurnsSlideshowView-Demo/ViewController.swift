@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.kenBurnsView.image = UIImage(named: "SampleImage1.jpg")
         let longPress = UILongPressGestureRecognizer(target: self, action: "showWholeImage:")
         longPress.minimumPressDuration = 0.2
         self.kenBurnsView.addGestureRecognizer(longPress)
@@ -38,6 +37,10 @@ class ViewController: UIViewController {
         var imageName = "SampleImage"
         imageName += sender.titleLabel!.text! + ".jpg"
         self.kenBurnsView.image = UIImage(named: imageName)
+    }
+    
+    @IBAction func removeButtonHandler(sender: UIButton) {
+        self.kenBurnsView.image = nil
     }
 }
 
