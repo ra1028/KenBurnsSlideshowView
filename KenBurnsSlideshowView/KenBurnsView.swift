@@ -235,17 +235,19 @@ class KenBurnsView: UIView {
             let resizeOptions: UIViewAnimationOptions = .BeginFromCurrentState | .CurveLinear
             let bounceOptions: UIViewAnimationOptions = .BeginFromCurrentState | .CurveEaseOut
             
-            UIView.animateWithDuration(0.3, delay: 0, options: resizeOptions, animations: resizeImage, completion: { (finished) -> Void in
-                if !self.wholeImageShowing {
-                    UIView.animateWithDuration(0.1, delay: 0, options: bounceOptions, animations: bounceImage, completion: { (finished) -> Void in
-                        if !self.wholeImageShowing {
-                            UIView.animateWithDuration(0.1, delay: 0, options: resizeOptions, animations: resizeImage, completion: { (finised) -> Void in
-                                self.wholeImageShowing = true
-                            })
-                        }
-                    })
-                }
-            })
+            if !self.wholeImageShowing {
+                UIView.animateWithDuration(0.3, delay: 0, options: resizeOptions, animations: resizeImage, completion: { (finished) -> Void in
+                    if !self.wholeImageShowing {
+                        UIView.animateWithDuration(0.1, delay: 0, options: bounceOptions, animations: bounceImage, completion: { (finished) -> Void in
+                            if !self.wholeImageShowing {
+                                UIView.animateWithDuration(0.1, delay: 0, options: resizeOptions, animations: resizeImage, completion: { (finised) -> Void in
+                                    self.wholeImageShowing = true
+                                })
+                            }
+                        })
+                    }
+                })
+            }
         }
     }
     
