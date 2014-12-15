@@ -36,7 +36,7 @@ class KenBurnsView: UIView {
     *   properties
     **/
     
-    private var imageView: UIImageView!
+    private var imageView: UIImageView! = UIImageView()
     private var wholeImageView: UIImageView!
     
     var image: UIImage? {
@@ -49,13 +49,12 @@ class KenBurnsView: UIView {
             self.wholeImageView.image = newValue
             
             if oldImage == nil {
-                let fade = { () -> Void in
-                    self.imageView.alpha = 0
-                    self.imageView.alpha = 1.0
-                }
-                UIView.animateWithDuration(0.5, delay: 0,
-                    options: .CurveEaseInOut,
-                    animations: fade, completion: nil)
+                let animation = CABasicAnimation(keyPath: "opacity")
+                animation.fromValue = 0
+                animation.toValue = 1.0
+                animation.duration = 0.7
+                animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                self.imageView.layer.addAnimation(animation, forKey: "fade")
             }
             
             if newValue != nil {
@@ -71,6 +70,13 @@ class KenBurnsView: UIView {
     }
     
     override var bounds: CGRect {
+        didSet {
+            self.setUpImageViewRect(self.image)
+            self.updateMotion()
+        }
+    }
+    
+    override var frame: CGRect {
         didSet {
             self.setUpImageViewRect(self.image)
             self.updateMotion()
@@ -170,7 +176,9 @@ class KenBurnsView: UIView {
     
     func pauseMotion() {
         if self.state == .Animating {
-            let pausedTime: CFTimeInterval = self.imageView.layer .convertTime(CACurrentMediaTime(), fromLayer: nil)
+            self.imageView.layer.removeAnimationForKey("fade")
+            
+            let pausedTime: CFTimeInterval = self.imageView.layer.convertTime(CACurrentMediaTime(), fromLayer: nil)
             self.imageView.layer.speed = 0
             self.imageView.layer.timeOffset = pausedTime
             self.state = .Pausing
@@ -189,6 +197,10 @@ class KenBurnsView: UIView {
         }
     }
     
+    func wholeImageShowing() -> Bool {
+        return self.wholeImageView.bounds.size != CGSizeZero
+    }
+    
     func resumeMotionWithMomentDelay() {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(NSEC_PER_SEC) * 0.1)), dispatch_get_main_queue()) { () -> Void in
             self.resumeMotion()
@@ -203,10 +215,7 @@ class KenBurnsView: UIView {
             self.wholeImageView.frame = layer!.frame
             self.wholeImageView.hidden = false
             self.imageView.hidden = true
-            UIView.animateWithDuration(0, animations: { () -> Void in
-                self.imageView.alpha = 0
-                self.imageView.alpha = 1.0 // for kill fade animation
-            })
+            self.imageView.layer.removeAnimationForKey("fade")
             
             let size = self.bounds.size
             let imageSize = self.imageView.bounds.size
@@ -239,7 +248,6 @@ class KenBurnsView: UIView {
             group.removedOnCompletion = false
             group.fillMode = kCAFillModeForwards
             group.animations = [pos, wholeSize]
-            
             self.wholeImageView.layer.addAnimation(group, forKey: "showWholeImage")
         }
     }
@@ -248,6 +256,13 @@ class KenBurnsView: UIView {
         let layer: CALayer? = self.imageView.layer.presentationLayer() as? CALayer
         
         if layer != nil {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock({ () -> Void in
+                self.imageView.hidden = false
+                self.wholeImageView.hidden = true
+                self.wholeImageView.frame = CGRectZero
+                self.resumeMotion()
+            })
             let pos = CABasicAnimation(keyPath: "position")
             pos.toValue = NSValue(CGPoint: CGPointMake(CGRectGetMinX(layer!.frame) + (CGRectGetWidth(layer!.frame) / 2), CGRectGetMinY(layer!.frame) + (CGRectGetHeight(layer!.frame) / 2)))
             
@@ -259,9 +274,9 @@ class KenBurnsView: UIView {
             group.removedOnCompletion = false
             group.fillMode = kCAFillModeForwards
             group.animations = [pos, size]
-            group.delegate = self
-            
             self.wholeImageView.layer.addAnimation(group, forKey: "zoomImage")
+            
+            CATransaction.commit()
         }
     }
     
@@ -279,7 +294,6 @@ class KenBurnsView: UIView {
         self.contentMode = .ScaleAspectFit
         self.backgroundColor = UIColor.blackColor()
         
-        self.imageView = UIImageView()
         self.imageView.clipsToBounds = true
         self.imageView.contentMode = .ScaleAspectFill
         self.insertSubview(self.imageView, atIndex: 0)
@@ -381,18 +395,5 @@ class KenBurnsView: UIView {
         let pad = self.padding
         var insets = UIEdgeInsetsMake(-pad.top, -pad.left, -pad.bottom, -pad.right)
         return UIEdgeInsetsInsetRect(zoomRect, insets)
-    }
-    
-    /**
-    *   delegate methods
-    **/
-    
-    override func animationDidStop(anim: CAAnimation!, finished flag: Bool) {
-        if anim == self.wholeImageView?.layer.animationForKey("zoomImage") {
-            self.imageView.hidden = false
-            self.wholeImageView.hidden = true
-            self.wholeImageView.frame = CGRectZero
-            self.resumeMotion()
-        }
     }
 }

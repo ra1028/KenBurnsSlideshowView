@@ -20,6 +20,8 @@
 		2A8B16AC1A3635DD007C81C8 /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8B16AB1A3635DD007C81C8 /* Reveal.framework */; };
 		2A8B16AE1A3635FA007C81C8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8B16AD1A3635FA007C81C8 /* CFNetwork.framework */; };
 		2A8B16B01A36364C007C81C8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8B16AF1A36364C007C81C8 /* QuartzCore.framework */; };
+		2A9F2C5A1A3B042D0028207C /* SlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F2C591A3B042D0028207C /* SlideshowViewController.swift */; };
+		2AB0D3791A3AE4DA00F861DE /* KenBurnsSlideshowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB0D3781A3AE4DA00F861DE /* KenBurnsSlideshowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,8 @@
 		2A8B16AB1A3635DD007C81C8 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 		2A8B16AD1A3635FA007C81C8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		2A8B16AF1A36364C007C81C8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2A9F2C591A3B042D0028207C /* SlideshowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowViewController.swift; sourceTree = "<group>"; };
+		2AB0D3781A3AE4DA00F861DE /* KenBurnsSlideshowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KenBurnsSlideshowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,7 @@
 			children = (
 				2A75FF441A2C4E6200E8BDDB /* AppDelegate.swift */,
 				2A75FF461A2C4E6200E8BDDB /* ViewController.swift */,
+				2A9F2C591A3B042D0028207C /* SlideshowViewController.swift */,
 				2A75FF481A2C4E6200E8BDDB /* Main.storyboard */,
 				2A75FF6B1A2C7B6300E8BDDB /* SampleImage1.jpg */,
 				2A1EFAEC1A3808880051F82F /* SampleImage2.jpg */,
@@ -140,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				2A75FF691A2C4F0500E8BDDB /* KenBurnsView.swift */,
+				2AB0D3781A3AE4DA00F861DE /* KenBurnsSlideshowView.swift */,
 			);
 			name = KenBurnsSlideshowView;
 			path = ../KenBurnsSlideshowView;
@@ -251,6 +257,8 @@
 				2A75FF6A1A2C4F0500E8BDDB /* KenBurnsView.swift in Sources */,
 				2A75FF471A2C4E6200E8BDDB /* ViewController.swift in Sources */,
 				2A75FF451A2C4E6200E8BDDB /* AppDelegate.swift in Sources */,
+				2A9F2C5A1A3B042D0028207C /* SlideshowViewController.swift in Sources */,
+				2AB0D3791A3AE4DA00F861DE /* KenBurnsSlideshowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

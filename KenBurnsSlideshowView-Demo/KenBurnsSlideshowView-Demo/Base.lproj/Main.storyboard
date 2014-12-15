@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="DuF-bS-3wk">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6246"/>
@@ -8,7 +8,7 @@
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="KenBurnsSlideshowView_Demo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="vXZ-lx-hvc" customClass="ViewController" customModule="KenBurnsSlideshowView_Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -155,24 +155,24 @@
                                 <exclude reference="bk6-R6-dZO"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="LWz-eb-dpy"/>
-                                <exclude reference="TD3-K6-xBF"/>
-                                <exclude reference="bVH-e7-3mW"/>
-                                <exclude reference="84L-FR-8ua"/>
-                                <exclude reference="a9H-A0-4gN"/>
-                                <exclude reference="fpb-5C-hba"/>
-                                <exclude reference="tn5-5u-BEM"/>
-                                <exclude reference="55V-5H-VuJ"/>
-                                <exclude reference="KLX-n9-3Qg"/>
-                                <exclude reference="Q2L-3n-7VR"/>
-                                <exclude reference="w6j-LY-5HK"/>
                                 <exclude reference="LrG-65-zSr"/>
                                 <exclude reference="auV-aX-Dof"/>
                                 <exclude reference="ent-uF-f8N"/>
                                 <exclude reference="uxa-ts-BFK"/>
+                                <exclude reference="Q2L-3n-7VR"/>
+                                <exclude reference="w6j-LY-5HK"/>
                                 <exclude reference="g6E-UH-diu"/>
                                 <exclude reference="lJx-PI-j0z"/>
                                 <exclude reference="tOb-xz-yEX"/>
+                                <exclude reference="55V-5H-VuJ"/>
+                                <exclude reference="KLX-n9-3Qg"/>
+                                <exclude reference="84L-FR-8ua"/>
+                                <exclude reference="a9H-A0-4gN"/>
+                                <exclude reference="fpb-5C-hba"/>
+                                <exclude reference="tn5-5u-BEM"/>
+                                <exclude reference="LWz-eb-dpy"/>
+                                <exclude reference="TD3-K6-xBF"/>
+                                <exclude reference="bVH-e7-3mW"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -184,24 +184,24 @@
                                 <include reference="bk6-R6-dZO"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="LWz-eb-dpy"/>
-                                <include reference="TD3-K6-xBF"/>
-                                <include reference="bVH-e7-3mW"/>
-                                <include reference="84L-FR-8ua"/>
-                                <include reference="a9H-A0-4gN"/>
-                                <include reference="fpb-5C-hba"/>
-                                <include reference="tn5-5u-BEM"/>
-                                <include reference="55V-5H-VuJ"/>
-                                <include reference="KLX-n9-3Qg"/>
-                                <include reference="Q2L-3n-7VR"/>
-                                <include reference="w6j-LY-5HK"/>
                                 <include reference="LrG-65-zSr"/>
                                 <include reference="auV-aX-Dof"/>
                                 <include reference="ent-uF-f8N"/>
                                 <include reference="uxa-ts-BFK"/>
+                                <include reference="Q2L-3n-7VR"/>
+                                <include reference="w6j-LY-5HK"/>
                                 <include reference="g6E-UH-diu"/>
                                 <include reference="lJx-PI-j0z"/>
                                 <include reference="tOb-xz-yEX"/>
+                                <include reference="55V-5H-VuJ"/>
+                                <include reference="KLX-n9-3Qg"/>
+                                <include reference="84L-FR-8ua"/>
+                                <include reference="a9H-A0-4gN"/>
+                                <include reference="fpb-5C-hba"/>
+                                <include reference="tn5-5u-BEM"/>
+                                <include reference="LWz-eb-dpy"/>
+                                <include reference="TD3-K6-xBF"/>
+                                <include reference="bVH-e7-3mW"/>
                             </mask>
                         </variation>
                     </view>
@@ -212,6 +212,61 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Slideshow View Controller-->
+        <scene sceneID="o35-9a-Rro">
+            <objects>
+                <viewController storyboardIdentifier="SlideshowViewController" id="DuF-bS-3wk" customClass="SlideshowViewController" customModule="KenBurnsSlideshowView_Demo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iLQ-lN-kZD"/>
+                        <viewControllerLayoutGuide type="bottom" id="wHq-hF-38L"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="MfR-sc-FtY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="csz-Uk-0NT" customClass="KenBurnsSlideshowView" customModule="KenBurnsSlideshowView_Demo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="csz-Uk-0NT" secondAttribute="trailing" id="4ZG-FJ-uaz"/>
+                            <constraint firstItem="csz-Uk-0NT" firstAttribute="leading" secondItem="MfR-sc-FtY" secondAttribute="leading" id="8wZ-8Q-hxi"/>
+                            <constraint firstItem="wHq-hF-38L" firstAttribute="top" secondItem="csz-Uk-0NT" secondAttribute="bottom" id="OBc-KM-h7F"/>
+                            <constraint firstItem="csz-Uk-0NT" firstAttribute="top" secondItem="MfR-sc-FtY" secondAttribute="top" id="j96-2n-89d"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="csz-Uk-0NT"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="OBc-KM-h7F"/>
+                                <exclude reference="4ZG-FJ-uaz"/>
+                                <exclude reference="8wZ-8Q-hxi"/>
+                                <exclude reference="j96-2n-89d"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="csz-Uk-0NT"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="OBc-KM-h7F"/>
+                                <include reference="4ZG-FJ-uaz"/>
+                                <include reference="8wZ-8Q-hxi"/>
+                                <include reference="j96-2n-89d"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="kenBurnsSlideshowView" destination="csz-Uk-0NT" id="twd-K9-AP6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oLS-ze-a5J" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1117.5" y="313"/>
         </scene>
     </scenes>
 </document>
