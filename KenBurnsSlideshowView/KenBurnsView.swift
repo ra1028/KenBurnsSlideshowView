@@ -105,6 +105,8 @@ class KenBurnsView: UIView {
         }
     }
     
+    var wholeImageShowing: Bool = false
+    
     private (set) var state: kenBurnsViewState = .Invalid
     
     private var startTransform: CGAffineTransform = CGAffineTransformIdentity
@@ -197,10 +199,6 @@ class KenBurnsView: UIView {
         }
     }
     
-    func wholeImageShowing() -> Bool {
-        return self.wholeImageView.bounds.size != CGSizeZero
-    }
-    
     func resumeMotionWithMomentDelay() {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(NSEC_PER_SEC) * 0.1)), dispatch_get_main_queue()) { () -> Void in
             self.resumeMotion()
@@ -223,60 +221,49 @@ class KenBurnsView: UIView {
             let imageAspect = imageSize.width / imageSize.height
             let rate = imageAspect >= aspect ? size.width / imageSize.width : size.height / imageSize.height
             let resizedSize = CGSizeMake(imageSize.width * rate, imageSize.height * rate)
+            let bounceSize = CGSizeApplyAffineTransform(resizedSize, CGAffineTransformMakeScale(1.05, 1.05))
             
-            let center = self.center
-            let times = [0, 0.6, 0.8, 1]
-            let timings = [CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear),
-                CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut),
-                CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)]
+            let resizeImage = { () -> Void in
+                self.wholeImageView.bounds.size = resizedSize
+                self.wholeImageView.center = self.center
+            }
+            let bounceImage = { () -> Void in
+                self.wholeImageView.bounds.size = bounceSize
+                self.wholeImageView.center = self.center
+            }
             
-            var pos = CAKeyframeAnimation(keyPath: "position")
-            pos.values = [NSValue(CGPoint: self.wholeImageView.center), NSValue(CGPoint: center), NSValue(CGPoint: center), NSValue(CGPoint: center)]
-            pos.keyTimes = times
-            pos.timingFunctions = timings
+            let resizeOptions: UIViewAnimationOptions = .BeginFromCurrentState | .CurveLinear
+            let bounceOptions: UIViewAnimationOptions = .BeginFromCurrentState | .CurveEaseOut
             
-            var wholeSize = CAKeyframeAnimation(keyPath: "bounds.size")
-            wholeSize.values = [NSValue(CGSize: self.wholeImageView.frame.size),
-                NSValue(CGSize: resizedSize),
-                NSValue(CGSize: CGSizeApplyAffineTransform(resizedSize, CGAffineTransformMakeScale(1.05, 1.05))),
-                NSValue(CGSize: resizedSize)]
-            wholeSize.keyTimes = times
-            wholeSize.timingFunctions = timings
-            
-            let group = CAAnimationGroup()
-            group.duration = 0.5
-            group.removedOnCompletion = false
-            group.fillMode = kCAFillModeForwards
-            group.animations = [pos, wholeSize]
-            self.wholeImageView.layer.addAnimation(group, forKey: "showWholeImage")
+            UIView.animateWithDuration(0.3, delay: 0, options: resizeOptions, animations: resizeImage, completion: { (finished) -> Void in
+                if !self.wholeImageShowing {
+                    UIView.animateWithDuration(0.1, delay: 0, options: bounceOptions, animations: bounceImage, completion: { (finished) -> Void in
+                        if !self.wholeImageShowing {
+                            UIView.animateWithDuration(0.1, delay: 0, options: resizeOptions, animations: resizeImage, completion: { (finised) -> Void in
+                                self.wholeImageShowing = true
+                            })
+                        }
+                    })
+                }
+            })
         }
     }
     
-    func zoomImageAndRestartMotion() {
+    func zoomImageAndRestartMotion(delay:Double = 0) {
         let layer: CALayer? = self.imageView.layer.presentationLayer() as? CALayer
         
         if layer != nil {
-            CATransaction.begin()
-            CATransaction.setCompletionBlock({ () -> Void in
+            self.wholeImageShowing = true
+            
+            UIView.animateWithDuration(0.25, delay: delay, options: .BeginFromCurrentState, animations: { () -> Void in
+                self.wholeImageView.frame = layer!.frame
+            }, completion: { (finished) -> Void in
+                self.wholeImageShowing = false
                 self.imageView.hidden = false
                 self.wholeImageView.hidden = true
                 self.wholeImageView.frame = CGRectZero
                 self.resumeMotion()
             })
-            let pos = CABasicAnimation(keyPath: "position")
-            pos.toValue = NSValue(CGPoint: CGPointMake(CGRectGetMinX(layer!.frame) + (CGRectGetWidth(layer!.frame) / 2), CGRectGetMinY(layer!.frame) + (CGRectGetHeight(layer!.frame) / 2)))
-            
-            let size = CABasicAnimation(keyPath: "bounds.size")
-            size.toValue = NSValue(CGSize: layer!.frame.size)
-            
-            let group = CAAnimationGroup()
-            group.duration = 0.25
-            group.removedOnCompletion = false
-            group.fillMode = kCAFillModeForwards
-            group.animations = [pos, size]
-            self.wholeImageView.layer.addAnimation(group, forKey: "zoomImage")
-            
-            CATransaction.commit()
         }
     }
     

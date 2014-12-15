@@ -49,13 +49,28 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         super.init(frame: frame)
         self.configure()
     }
-   
-    override func layoutSubviews() {
-        self.scrollView.frame = self.bounds
-        super.layoutSubviews()
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     private func configure() {
+        self.configureViews()
+        self.configureObserver()
+    }
+    
+    private func configureObserver() {
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "pauseCurrentKenBurnsMotion",
+            name: UIApplicationDidEnterBackgroundNotification,
+            object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "resumeCurrentKenBurnsMotion",
+            name: UIApplicationDidBecomeActiveNotification,
+            object: nil)
+    }
+    
+    private func configureViews() {
         self.backgroundColor = UIColor.blackColor()
         self.clipsToBounds = true
         
@@ -92,11 +107,23 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         
         for i in 0...2 {
             let kenBurns = KenBurnsView(frame: self.bounds)
+            NSNotificationCenter.defaultCenter().removeObserver(kenBurns)
             self.kenBurnsViews.append(kenBurns)
         }
         
         self.updateKenBurnsViewImage()
         self.layoutKenburnsViews()
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.pauseBothSideKenBurnsView()
+        })
+    }
+    
+    func pauseCurrentKenBurnsMotion() {
+        self.currentKenBurnsView.pauseMotion()
+    }
+    
+    func resumeCurrentKenBurnsMotion() {
+        self.currentKenBurnsView.resumeMotionWithMomentDelay()
     }
     
     private func updateKenBurnsViewImage() {
@@ -142,13 +169,8 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         case .Cancelled:
             fallthrough
         case .Ended:
-            var delay: Double = 0
-            if self.currentKenBurnsView.wholeImageShowing() {
-                delay = 0.2
-            }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(NSEC_PER_SEC) * delay)), dispatch_get_main_queue(), { () -> Void in
-                self.currentKenBurnsView.zoomImageAndRestartMotion()
-            })
+            var delay:Double = self.currentKenBurnsView.wholeImageShowing ? 0.2 : 0
+            self.currentKenBurnsView.zoomImageAndRestartMotion(delay: delay)
         default:
             break
         }

@@ -13,6 +13,15 @@ class SlideshowViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setUpSlideshow()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+    }
+    
+    private func setUpSlideshow() {
         var images: [UIImage] = []
         for i in 1...3 {
             var name = "SampleImage"
