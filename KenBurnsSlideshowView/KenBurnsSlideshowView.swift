@@ -28,6 +28,18 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     private var scrollView: KenBurnsInfinitePageView!
     private var darkCoverView: UIView = UIView()
     
+    var titleViewClass: KenBurnsSlideshowTitleView.Type! {
+        didSet {
+            let titleViewClass = self.titleViewClass.self
+            var pages: [UIView] = []
+            for i in 0..<3 {
+                let page: KenBurnsSlideshowTitleView = titleViewClass(frame: self.scrollView.bounds)
+                pages.append(page)
+            }
+            self.scrollView.pageItems = pages
+        }
+    }
+    
     var previousKenBurnsView: KenBurnsView {
         return self.kenBurnsViews[2]
     }
@@ -92,18 +104,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         longPress.delegate = self
         self.addGestureRecognizer(longPress)
         
-        var views = [UIView]()
-        for i in 1...3 {
-            var view = UIView(frame: UIScreen.mainScreen().bounds)
-            var label = UILabel()
-            label.frame.size = CGSizeMake(100, 100)
-            label.font = UIFont.boldSystemFontOfSize(50.0)
-            label.text = "\(i)"
-            view.addSubview(label)
-            views.append(view)
-        }
-        
-        self.scrollView.pageItems = views
+        self.titleViewClass = KenBurnsSlideshowTitleView.self
         
         for i in 0...2 {
             let kenBurns = KenBurnsView(frame: self.bounds)
@@ -230,6 +231,62 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     optional func infinitePageViewDidShowNextPage(#pageView: KenBurnsInfinitePageView)
 }
 
+
+
+class KenBurnsSlideshowTitleView: UIView {
+    private var titleLabel: UILabel! = UILabel()
+    private var subTitleLabel: UILabel! = UILabel()
+    
+    var title: String? {
+        didSet {
+            self.titleLabel.text = title
+        }
+    }
+    var subTitle: String? {
+        didSet {
+            self.subTitleLabel.text = subTitle
+        }
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.configure()
+    }
+    
+    required override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.configure()
+    }
+    
+    private func configure() {
+        self.backgroundColor = UIColor.clearColor()
+        
+        self.titleLabel.frame.size.height = 20.0
+        self.subTitleLabel.frame.size.height = 20.0
+        
+        self.insertSubview(self.titleLabel, atIndex: 0)
+        self.insertSubview(self.subTitleLabel, atIndex: 0)
+        
+        self.applyConstraints(self.titleLabel, toView: self, bottomMargin: 20.0)
+        self.applyConstraints(self.subTitleLabel, toView: self.titleLabel, bottomMargin: self.titleLabel.bounds.height)
+    }
+    
+    private func applyConstraints(fromView: UIView, toView: UIView, bottomMargin: CGFloat) {
+        fromView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        
+        let heightConst = NSLayoutConstraint(item: fromView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1.0, constant: fromView.bounds.height)
+        fromView.addConstraint(heightConst)
+        
+        let centerConst = NSLayoutConstraint(item: fromView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0)
+        let leftConst = NSLayoutConstraint(item: fromView, attribute: .Leading, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 15.0)
+        let rightConst = NSLayoutConstraint(item: fromView, attribute: .Trailing, relatedBy: .Equal, toItem: self, attribute: .Right, multiplier: 1.0, constant: -15.0)
+        let bottomConst = NSLayoutConstraint(item: fromView, attribute: .Bottom, relatedBy: .Equal, toItem: toView, attribute: .Bottom, multiplier: 1.0, constant: -bottomMargin)
+        self.addConstraints([leftConst, rightConst, bottomConst])
+    }
+}
+
+
+
 internal class KenBurnsInfinitePageView: UIScrollView {
     override var frame: CGRect {
         didSet {
@@ -340,6 +397,13 @@ internal class KenBurnsInfinitePageView: UIScrollView {
             let originX = CGRectGetWidth(self.bounds) * CGFloat(index)
             view.frame = self.bounds
             view.frame.origin.x = originX
+            if self.pageItems != nil {
+                if self.pageItems!.count > index {
+                    let page = self.pageItems![self.pageOrderIndexes[index]]
+                    page.center.x = CGRectGetWidth(page.bounds) / 2
+                    page.center.y = CGRectGetHeight(page.bounds) / 2
+                }
+            }
         }
         
         self.updateContentSize()
@@ -444,16 +508,10 @@ internal class KenBurnsInfinitePageView: UIScrollView {
             let contentView = self.contentViews[index]
             let size = view.bounds.size
             
-            view.setTranslatesAutoresizingMaskIntoConstraints(false)
+            view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+            view.center.x = CGRectGetWidth(view.bounds) / 2
+            view.center.y = CGRectGetHeight(view.bounds) / 2
             contentView.insertSubview(view, atIndex: 0)
-            
-            let widthConst = NSLayoutConstraint(item: view, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .Width, multiplier: 1.0, constant: size.width)
-            let heightConst = NSLayoutConstraint(item: view, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1.0, constant: size.height)
-            view.addConstraints([widthConst, heightConst])
-            
-            let horizontalConst = NSLayoutConstraint(item: view, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1.0, constant: 0)
-            let verticalConst = NSLayoutConstraint(item: view, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1.0, constant: 0)
-            contentView.addConstraints([horizontalConst, verticalConst])
         }
     }
     
