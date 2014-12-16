@@ -46,6 +46,8 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
                 let page: KenBurnsSlideshowTitleView = titleViewClass(frame: self.scrollView.bounds)
                 page.title = "Testing \(i)"
                 page.subTitle = "Now"
+                page.titleColor = UIColor.whiteColor()
+                page.subTitleColor = UIColor.whiteColor()
                 pages.append(page)
             }
             self.scrollView.pageItems = pages
@@ -309,15 +311,95 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
 class KenBurnsSlideshowTitleView: UIView {
     private var titleLabel: UILabel! = UILabel()
     private var subTitleLabel: UILabel! = UILabel()
+    private var heightConstraint: NSLayoutConstraint!
+    private var gradientLayer: CAGradientLayer! = CAGradientLayer()
     
     var title: String? {
-        didSet {
-            self.titleLabel.text = title
+        set {
+            self.titleLabel.text = newValue
+        }
+        get {
+            return self.titleLabel.text
         }
     }
     var subTitle: String? {
-        didSet {
-            self.subTitleLabel.text = subTitle
+        set {
+            self.subTitleLabel.text = newValue
+        }
+        get {
+            return self.subTitleLabel.text
+        }
+    }
+    
+    var titleFont: UIFont! {
+        set {
+            self.titleLabel.font = newValue
+        }
+        get {
+            return self.titleLabel.font
+        }
+    }
+    
+    var subTitleFont: UIFont! {
+        set {
+            self.titleLabel.font = newValue
+        }
+        get {
+            return self.subTitleLabel.font
+        }
+    }
+    
+    var titleAlignment: NSTextAlignment! {
+        set {
+            self.titleLabel.textAlignment = newValue
+        }
+        get {
+            return self.titleLabel.textAlignment
+        }
+    }
+    
+    var subTitleAlignment: NSTextAlignment! {
+        set {
+            self.subTitleLabel.textAlignment = newValue
+        }
+        get {
+            return self.subTitleLabel.textAlignment
+        }
+    }
+    
+    var titleColor: UIColor! {
+        set {
+            self.titleLabel.textColor = newValue
+        }
+        get {
+            return self.titleLabel.textColor
+        }
+    }
+    
+    var subTitleColor: UIColor! {
+        set {
+            self.subTitleLabel.textColor = newValue
+        }
+        get {
+            return self.subTitleLabel.textColor
+        }
+    }
+    
+    var titleAttributedText: NSAttributedString {
+        set {
+            self.titleLabel.attributedText = newValue
+        }
+        get {
+            return self.titleLabel.attributedText
+        }
+    }
+    
+    var subTitleAttributeText: NSAttributedString {
+        set {
+            self.subTitleLabel.attributedText = newValue
+        }
+        get {
+            return self.subTitleLabel.attributedText
         }
     }
     
@@ -331,14 +413,26 @@ class KenBurnsSlideshowTitleView: UIView {
         self.configure()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.gradientLayer.bounds.size = CGSizeMake(self.bounds.width, 110.0)
+        self.gradientLayer.frame.origin = CGPointMake(0, self.bounds.height - self.gradientLayer.bounds.height)
+    }
+    
     private func configure() {
         self.backgroundColor = UIColor.clearColor()
         
         self.titleLabel.frame.size.height = 20.0
-        self.subTitleLabel.frame.size.height = 20.0
-        
+        self.titleLabel.textColor = UIColor.whiteColor()
         self.insertSubview(self.titleLabel, atIndex: 0)
+        
+        self.subTitleLabel.frame.size.height = 20.0
+        self.subTitleLabel.textColor = UIColor.whiteColor()
         self.insertSubview(self.subTitleLabel, atIndex: 0)
+        
+        self.gradientLayer.colors = [UIColor.clearColor().CGColor, UIColor.blackColor().colorWithAlphaComponent(0.6).CGColor]
+        self.gradientLayer.locations = [0, 1.0]
+        self.layer.insertSublayer(self.gradientLayer, atIndex: 0)
         
         self.applyConstraints(self.titleLabel, toView: self, bottomMargin: 20.0)
         self.applyConstraints(self.subTitleLabel, toView: self.titleLabel, bottomMargin: self.titleLabel.bounds.height)
@@ -347,8 +441,8 @@ class KenBurnsSlideshowTitleView: UIView {
     private func applyConstraints(fromView: UIView, toView: UIView, bottomMargin: CGFloat) {
         fromView.setTranslatesAutoresizingMaskIntoConstraints(false)
         
-        let heightConst = NSLayoutConstraint(item: fromView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1.0, constant: fromView.bounds.height)
-        fromView.addConstraint(heightConst)
+        self.heightConstraint = NSLayoutConstraint(item: fromView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1.0, constant: fromView.bounds.height)
+        fromView.addConstraint(self.heightConstraint!)
         
         let centerConst = NSLayoutConstraint(item: fromView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0)
         let leftConst = NSLayoutConstraint(item: fromView, attribute: .Leading, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 15.0)
