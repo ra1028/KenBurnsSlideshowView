@@ -251,7 +251,7 @@ class KenBurnsView: UIView {
         }
     }
     
-    func zoomImageAndRestartMotion(delay:Double = 0) {
+    func zoomImageAndRestartMotion(delay:Double = 0, completion:(Bool -> ())? = nil) {
         let layer: CALayer? = self.imageView.layer.presentationLayer() as? CALayer
         
         if layer != nil {
@@ -265,6 +265,7 @@ class KenBurnsView: UIView {
                 self.wholeImageView.hidden = true
                 self.wholeImageView.frame = CGRectZero
                 self.resumeMotion()
+                completion?(finished)
             })
         }
     }

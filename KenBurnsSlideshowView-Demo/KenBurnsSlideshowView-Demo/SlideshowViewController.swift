@@ -16,11 +16,6 @@ class SlideshowViewController: UIViewController {
         self.setUpSlideshow()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
-    
     private func setUpSlideshow() {
         var images: [UIImage] = []
         for i in 1...3 {
@@ -29,5 +24,6 @@ class SlideshowViewController: UIViewController {
             images.append(UIImage(named: name)!)
         }
         self.kenBurnsSlideshowView.images = images
+        self.kenBurnsSlideshowView.slideshowDuration = 4.0
     }
 }

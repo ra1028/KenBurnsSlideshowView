@@ -27,6 +27,16 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     private var kenBurnsViews: [KenBurnsView]! = []
     private var scrollView: KenBurnsInfinitePageView!
     private var darkCoverView: UIView = UIView()
+    private var slideshowTimer: NSTimer?
+    private var timerInterval: NSTimeInterval = 10.0
+    private var timerFiredDate: NSDate = NSDate()
+    
+    var slideshowDuration: CGFloat = 10.0 {
+        didSet {
+            self.timerInterval = NSTimeInterval(self.slideshowDuration)
+            self.configureTimer()
+        }
+    }
     
     var titleViewClass: KenBurnsSlideshowTitleView.Type! {
         didSet {
@@ -34,9 +44,21 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
             var pages: [UIView] = []
             for i in 0..<3 {
                 let page: KenBurnsSlideshowTitleView = titleViewClass(frame: self.scrollView.bounds)
+                page.title = "Testing \(i)"
+                page.subTitle = "Now"
                 pages.append(page)
             }
             self.scrollView.pageItems = pages
+        }
+    }
+    
+    var slideshowEnabled: Bool = true {
+        didSet {
+            if self.slideshowEnabled {
+                self.configureTimer()
+            }else {
+                self.invalidateSlideshowTimer()
+            }
         }
     }
     
@@ -64,11 +86,13 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.pauseSlideshowTimer()
     }
     
     private func configure() {
         self.configureViews()
         self.configureObserver()
+        self.configureTimer()
     }
     
     private func configureObserver() {
@@ -86,6 +110,8 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         self.backgroundColor = UIColor.blackColor()
         self.clipsToBounds = true
         
+        self.timerInterval = NSTimeInterval(self.slideshowDuration)
+        
         self.darkCoverView.frame = self.bounds
         self.darkCoverView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         self.darkCoverView.alpha = 0
@@ -100,7 +126,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         self.insertSubview(self.scrollView, atIndex: 0)
         
         var longPress = UILongPressGestureRecognizer(target: self, action: "longPressHandler:")
-        longPress.minimumPressDuration = 0.22
+        longPress.minimumPressDuration = 0.25
         longPress.delegate = self
         self.addGestureRecognizer(longPress)
         
@@ -114,10 +140,25 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         
         self.updateKenBurnsViewImage()
         self.layoutKenburnsViews()
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.pauseBothSideKenBurnsView()
-        })
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in self.pauseBothSideKenBurnsView() })
     }
+    
+    private func configureTimer() {
+        self.slideshowTimer?.invalidate()
+        self.slideshowTimer = nil
+        
+        self.slideshowTimer = NSTimer.scheduledTimerWithTimeInterval(self.timerInterval, target: self, selector: "showNextKenBurnsView", userInfo: nil, repeats: true)
+        
+        self.timerFiredDate = NSDate()
+    }
+    
+    func showNextKenBurnsView() {
+        self.scrollView.scrollToNextPage()
+        
+        self.timerInterval = NSTimeInterval(self.slideshowDuration)
+        self.configureTimer()
+    }
+    
     
     func pauseCurrentKenBurnsMotion() {
         self.currentKenBurnsView.pauseMotion()
@@ -125,6 +166,29 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     
     func resumeCurrentKenBurnsMotion() {
         self.currentKenBurnsView.resumeMotionWithMomentDelay()
+    }
+    
+    private func pauseSlideshowTimer() {
+        if self.slideshowTimer != nil {
+            if self.slideshowTimer!.valid {
+                self.slideshowTimer!.invalidate()
+                self.slideshowTimer = nil
+                self.timerInterval = NSTimeInterval(self.slideshowDuration) - NSDate().timeIntervalSinceDate(self.timerFiredDate)
+                if self.timerInterval <= 0 {
+                    self.timerInterval = NSTimeInterval(self.slideshowDuration)
+                }
+            }
+        }
+    }
+    
+    private func resumeSlideshowTimer() {
+        self.configureTimer()
+    }
+    
+    private func invalidateSlideshowTimer() {
+        self.slideshowTimer?.invalidate()
+        self.slideshowTimer = nil
+        self.timerInterval = NSTimeInterval(self.slideshowDuration)
     }
     
     private func updateKenBurnsViewImage() {
@@ -167,11 +231,14 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         switch gesture.state {
         case .Began:
             self.currentKenBurnsView.showWholeImage()
+            self.pauseSlideshowTimer()
         case .Cancelled:
             fallthrough
         case .Ended:
             var delay:Double = self.currentKenBurnsView.wholeImageShowing ? 0.2 : 0
-            self.currentKenBurnsView.zoomImageAndRestartMotion(delay: delay)
+            self.currentKenBurnsView.zoomImageAndRestartMotion(delay: delay, completion: { Bool -> () in
+                self.resumeSlideshowTimer()
+            })
         default:
             break
         }
@@ -207,18 +274,24 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         let prevView = self.kenBurnsViews.removeLast()
         self.kenBurnsViews.insert(prevView, atIndex: 0)
         
+        self.nextKenBurnsView.zoomImageAndRestartMotion()
         self.pauseBothSideKenBurnsView()
         
         self.layoutKenburnsViews()
+        
+        self.configureTimer()
     }
     
     func infinitePageViewDidShowNextPage(#pageView: KenBurnsInfinitePageView) {
         let nextView = self.kenBurnsViews.removeAtIndex(0)
         self.kenBurnsViews.append(nextView)
         
+        self.previousKenBurnsView.zoomImageAndRestartMotion()
         self.pauseBothSideKenBurnsView()
         
         self.layoutKenburnsViews()
+        
+        self.configureTimer()
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -346,6 +419,38 @@ internal class KenBurnsInfinitePageView: UIScrollView {
         self.removeObserver(self, forKeyPath: "contentOffset")
     }
     
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+        if keyPath == "contentOffset" {
+            self.reorderContentViewsIfNeeded()
+        }else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+    }
+    
+    func scrllToPreviousPage(duration: NSTimeInterval = 1.5) {
+        let contentCenter = self.contentSize.width / 2
+        let pageWidth = self.bounds.width
+        let previousOffsetX = contentCenter - (pageWidth / 2)
+        
+        UIView.animateWithDuration(duration, delay: 0, options: .BeginFromCurrentState, animations: { () -> Void in
+            self.contentOffset.x = previousOffsetX + 1.0
+            }, completion: { (finished) -> () in
+                self.contentOffset.x = previousOffsetX
+        })
+    }
+    
+    func scrollToNextPage(duration: NSTimeInterval = 1.5) {
+        let contentCenter = self.contentSize.width / 2
+        let pageWidth = self.bounds.width
+        let nextOffsetX = contentCenter + (pageWidth / 2)
+        
+        UIView.animateWithDuration(duration, delay: 0, options: .BeginFromCurrentState, animations: { () -> Void in
+            self.contentOffset.x = nextOffsetX - 1.0
+            }, completion: { (finished) -> () in
+                self.contentOffset.x = nextOffsetX
+        })
+    }
+    
     private func configure() {
         self.scrollEnabled = false
         self.scrollsToTop = false
@@ -366,14 +471,6 @@ internal class KenBurnsInfinitePageView: UIScrollView {
         
         self.updateContentSize()
         self.offsetCentering()
-    }
-    
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-        if keyPath == "contentOffset" {
-            self.reorderContentViewsIfNeeded()
-        }else {
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-        }
     }
     
     private func offsetCentering() {
