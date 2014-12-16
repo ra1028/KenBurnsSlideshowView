@@ -8,14 +8,12 @@
 
 import UIKit
 
+@objc protocol KenBurnsSlideshowViewDelegate: NSObjectProtocol {
+    optional func kenBurnsSlideshowView(slideshowView: KenBurnsSlideshowView, downloadUrl url: NSURL, completion: (UIImage -> ()))
+    optional func kenBurnsSlideshowView(slideshowView: KenBurnsSlideshowView, willShowKenBurnsView view: KenBurnsView)
+}
+
 class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfinitePageViewDelegate {
-    var images: [KenBurnsSlideshowImageObject]? {
-        didSet {
-            self.updateKenBurnsView()
-            self.layoutKenburnsViews()
-        }
-    }
-    
     override var bounds: CGRect {
         didSet {
             for kenburnsView in self.kenBurnsViews {
@@ -84,6 +82,15 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
             }
         }
     }
+    
+    var images: [KenBurnsSlideshowImageObject]? {
+        didSet {
+            self.updateKenBurnsView()
+            self.layoutKenburnsViews()
+        }
+    }
+    
+    weak var delegate: KenBurnsSlideshowViewDelegate?
     
     var previousKenBurnsView: KenBurnsView {
         return self.kenBurnsViews[2]
@@ -274,16 +281,27 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         self.updateKenBurnsViewTitle()
     }
     
+    private func asynchronousSetImage(kenBurnsView view: KenBurnsView, image: KenBurnsSlideshowImageObject) {
+        view.image = nil
+        if image.image != nil {
+            view.image = image.image
+        }else if image.imageUrl != nil {
+            self.delegate?.kenBurnsSlideshowView?(self, downloadUrl: image.imageUrl!, completion: { (downloadedImage: UIImage) -> () in
+                view.image = downloadedImage
+            })
+        }
+    }
+    
     private func updateKenBurnsViewImage() {
         var slideEnabled = true
         if self.images != nil {
             if self.images!.count >= 2 {
-                self.currentKenBurnsView.image = self.images![0].image
-                self.nextKenBurnsView.image = self.images![1].image
-                self.previousKenBurnsView.image = self.images![self.images!.count-1].image
+                self.asynchronousSetImage(kenBurnsView: self.currentKenBurnsView, image: self.images![0])
+                self.asynchronousSetImage(kenBurnsView: self.nextKenBurnsView, image: self.images![1])
+                self.asynchronousSetImage(kenBurnsView: self.previousKenBurnsView, image: self.images![self.images!.count - 1])
                 slideEnabled = true
             }else if self.images!.count == 1 {
-                self.currentKenBurnsView.image = self.images![0].image
+                self.asynchronousSetImage(kenBurnsView: self.currentKenBurnsView, image: self.images![0])
                 slideEnabled = false
             }
         }else {
@@ -403,7 +421,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         self.titleViews.insert(prevTitle, atIndex: 0)
         
         self.updateCurrentIndex(-1)
-        self.previousKenBurnsView.image = self.images![self.getPreviousIndex()].image
+        self.asynchronousSetImage(kenBurnsView: self.previousKenBurnsView, image: self.images![self.getPreviousIndex()])
         self.previousTitleView.title = self.images![self.getPreviousIndex()].title
         self.previousTitleView.subTitle = self.images![self.getPreviousIndex()].subTitle
         
@@ -422,7 +440,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         self.titleViews.append(nextTitle)
         
         self.updateCurrentIndex(1)
-        self.nextKenBurnsView.image = self.images![self.getNextIndex()].image
+        self.asynchronousSetImage(kenBurnsView: self.nextKenBurnsView, image: self.images![self.getNextIndex()])
         self.nextTitleView.title = self.images![self.getNextIndex()].title
         self.nextTitleView.subTitle = self.images![self.getNextIndex()].subTitle
         

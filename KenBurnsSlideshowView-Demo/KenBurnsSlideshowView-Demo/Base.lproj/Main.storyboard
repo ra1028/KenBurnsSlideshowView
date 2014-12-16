@@ -277,12 +277,12 @@
                                 <exclude reference="OSy-hi-OaE"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="31l-eD-c2Z"/>
+                                <exclude reference="OBc-KM-h7F"/>
+                                <exclude reference="frf-7S-j6z"/>
                                 <exclude reference="4ZG-FJ-uaz"/>
                                 <exclude reference="8wZ-8Q-hxi"/>
                                 <exclude reference="j96-2n-89d"/>
-                                <exclude reference="frf-7S-j6z"/>
-                                <exclude reference="31l-eD-c2Z"/>
-                                <exclude reference="OBc-KM-h7F"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -291,12 +291,12 @@
                                 <include reference="OSy-hi-OaE"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="31l-eD-c2Z"/>
+                                <include reference="OBc-KM-h7F"/>
+                                <include reference="frf-7S-j6z"/>
                                 <include reference="4ZG-FJ-uaz"/>
                                 <include reference="8wZ-8Q-hxi"/>
                                 <include reference="j96-2n-89d"/>
-                                <include reference="frf-7S-j6z"/>
-                                <include reference="31l-eD-c2Z"/>
-                                <include reference="OBc-KM-h7F"/>
                             </mask>
                         </variation>
                     </view>
