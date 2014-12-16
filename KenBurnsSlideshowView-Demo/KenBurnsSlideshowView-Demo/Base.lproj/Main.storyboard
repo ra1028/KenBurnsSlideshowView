@@ -229,34 +229,74 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OSy-hi-OaE">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="P17-bX-l8w"/>
+                                    <constraint firstAttribute="height" constant="50" id="dZ4-Tl-7ip"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="50"/>
+                                <state key="normal" title="＋">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="P17-bX-l8w"/>
+                                        <exclude reference="dZ4-Tl-7ip"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="P17-bX-l8w"/>
+                                        <include reference="dZ4-Tl-7ip"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="plusButton:" destination="DuF-bS-3wk" eventType="touchUpInside" id="DfI-ui-sEt"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="wHq-hF-38L" firstAttribute="top" secondItem="OSy-hi-OaE" secondAttribute="bottom" constant="27" id="31l-eD-c2Z">
+                                <variation key="widthClass=compact" constant="30"/>
+                            </constraint>
                             <constraint firstAttribute="trailing" secondItem="csz-Uk-0NT" secondAttribute="trailing" id="4ZG-FJ-uaz"/>
                             <constraint firstItem="csz-Uk-0NT" firstAttribute="leading" secondItem="MfR-sc-FtY" secondAttribute="leading" id="8wZ-8Q-hxi"/>
-                            <constraint firstItem="wHq-hF-38L" firstAttribute="top" secondItem="csz-Uk-0NT" secondAttribute="bottom" id="OBc-KM-h7F"/>
+                            <constraint firstItem="wHq-hF-38L" firstAttribute="top" secondItem="csz-Uk-0NT" secondAttribute="bottom" id="OBc-KM-h7F">
+                                <variation key="widthClass=compact" constant="100"/>
+                            </constraint>
+                            <constraint firstAttribute="centerX" secondItem="OSy-hi-OaE" secondAttribute="centerX" constant="125" id="frf-7S-j6z">
+                                <variation key="widthClass=compact" constant="0.0"/>
+                            </constraint>
                             <constraint firstItem="csz-Uk-0NT" firstAttribute="top" secondItem="MfR-sc-FtY" secondAttribute="top" id="j96-2n-89d"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="csz-Uk-0NT"/>
+                                <exclude reference="OSy-hi-OaE"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="OBc-KM-h7F"/>
                                 <exclude reference="4ZG-FJ-uaz"/>
                                 <exclude reference="8wZ-8Q-hxi"/>
                                 <exclude reference="j96-2n-89d"/>
+                                <exclude reference="frf-7S-j6z"/>
+                                <exclude reference="31l-eD-c2Z"/>
+                                <exclude reference="OBc-KM-h7F"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="csz-Uk-0NT"/>
+                                <include reference="OSy-hi-OaE"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="OBc-KM-h7F"/>
                                 <include reference="4ZG-FJ-uaz"/>
                                 <include reference="8wZ-8Q-hxi"/>
                                 <include reference="j96-2n-89d"/>
+                                <include reference="frf-7S-j6z"/>
+                                <include reference="31l-eD-c2Z"/>
+                                <include reference="OBc-KM-h7F"/>
                             </mask>
                         </variation>
                     </view>
@@ -266,7 +306,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oLS-ze-a5J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1117.5" y="313"/>
+            <point key="canvasLocation" x="1282.5" y="279"/>
         </scene>
     </scenes>
 </document>

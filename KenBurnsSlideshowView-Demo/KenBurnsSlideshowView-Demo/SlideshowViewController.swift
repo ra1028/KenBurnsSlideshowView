@@ -9,6 +9,8 @@
 import UIKit
 
 class SlideshowViewController: UIViewController {
+    var imageCount = 0
+    
     @IBOutlet weak var kenBurnsSlideshowView: KenBurnsSlideshowView!
     
     override func viewDidLoad() {
@@ -17,13 +19,40 @@ class SlideshowViewController: UIViewController {
     }
     
     private func setUpSlideshow() {
-        var images: [UIImage] = []
-        for i in 1...3 {
+        var images: [KenBurnsSlideshowImageObject] = []
+        for i in 1...15 {
             var name = "SampleImage"
             name += "\(i)" + ".jpg"
-            images.append(UIImage(named: name)!)
+            let imageObject = KenBurnsSlideshowImageObject()
+            imageObject.title = "\(name)"
+            imageObject.image = UIImage(named: name)
+            images.append(imageObject)
+            self.imageCount++
         }
         self.kenBurnsSlideshowView.images = images
-        self.kenBurnsSlideshowView.slideshowDuration = 4.0
+        let duration: CGFloat = 10.0
+        self.kenBurnsSlideshowView.slideshowDuration = duration
+        self.kenBurnsSlideshowView.kenBurnsEffectDuration = duration
+        self.kenBurnsSlideshowView.coverImage = UIImage(named: "SampleImage16.jpg")
+    }
+    
+    
+    @IBAction func plusButton(sender: AnyObject) {
+        if self.kenBurnsSlideshowView.isShowingCoverImage {
+            self.kenBurnsSlideshowView.hideCoverImage(animated: true)
+        }else {
+            self.kenBurnsSlideshowView.showCoverImage(animated: true)
+        }
+//        self.imageCount++
+//        if imageCount <= 16 {
+//            var name = "SampleImage"
+//            name += "\(self.imageCount)" + ".jpg"
+//            let imageObject = KenBurnsSlideshowImageObject()
+//            imageObject.title = "\(name)"
+//            imageObject.image = UIImage(named: name)
+//            self.kenBurnsSlideshowView.appendImage(image: imageObject)
+//        }else {
+//            self.imageCount--
+//        }
     }
 }

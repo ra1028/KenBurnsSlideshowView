@@ -9,9 +9,9 @@
 import UIKit
 
 class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfinitePageViewDelegate {
-    var images: [UIImage]? {
+    var images: [KenBurnsSlideshowImageObject]? {
         didSet {
-            self.updateKenBurnsViewImage()
+            self.updateKenBurnsView()
             self.layoutKenburnsViews()
         }
     }
@@ -25,11 +25,14 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     }
     
     private var kenBurnsViews: [KenBurnsView]! = []
+    private var titleViews: [KenBurnsSlideshowTitleView]! = []
     private var scrollView: KenBurnsInfinitePageView!
+    private var coverImageView: UIImageView! = UIImageView()
     private var darkCoverView: UIView = UIView()
     private var slideshowTimer: NSTimer?
     private var timerInterval: NSTimeInterval = 10.0
     private var timerFiredDate: NSDate = NSDate()
+    private var currentIndex: Int = 0
     
     var slideshowDuration: CGFloat = 10.0 {
         didSet {
@@ -38,19 +41,37 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         }
     }
     
-    var titleViewClass: KenBurnsSlideshowTitleView.Type! {
+    var kenBurnsEffectDuration: CGFloat! = 15.0 {
         didSet {
+            for kenBurnsView in self.kenBurnsViews {
+                kenBurnsView.kenBurnsEffectDuration = self.kenBurnsEffectDuration
+            }
+        }
+    }
+    
+    var coverImage: UIImage? {
+        didSet {
+            self.coverImageView.image = self.coverImage
+        }
+    }
+    
+    private (set) var isShowingCoverImage: Bool = false
+    
+    var coverImageFadeDuration: CGFloat! = 0.5
+    
+    var titleViewClass: KenBurnsSlideshowTitleView.Type! = KenBurnsSlideshowTitleView.self {
+        didSet {
+            for titleView in self.titleViews {
+                titleView.removeFromSuperview()
+            }
+            
             let titleViewClass = self.titleViewClass.self
-            var pages: [UIView] = []
+            self.titleViews = []
             for i in 0..<3 {
                 let page: KenBurnsSlideshowTitleView = titleViewClass(frame: self.scrollView.bounds)
-                page.title = "Testing \(i)"
-                page.subTitle = "Now"
-                page.titleColor = UIColor.whiteColor()
-                page.subTitleColor = UIColor.whiteColor()
-                pages.append(page)
+                self.titleViews.append(page)
             }
-            self.scrollView.pageItems = pages
+            self.scrollView.pageItems = self.titleViews
         }
     }
     
@@ -67,13 +88,21 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     var previousKenBurnsView: KenBurnsView {
         return self.kenBurnsViews[2]
     }
-    
     var currentKenBurnsView: KenBurnsView {
         return self.kenBurnsViews[0]
     }
-    
     var nextKenBurnsView: KenBurnsView {
         return self.kenBurnsViews[1]
+    }
+    
+    var previousTitleView: KenBurnsSlideshowTitleView {
+        return self.titleViews[2]
+    }
+    var currentTitleView: KenBurnsSlideshowTitleView {
+        return self.titleViews[0]
+    }
+    var nextTitleView: KenBurnsSlideshowTitleView {
+        return self.titleViews[1]
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -114,6 +143,14 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         
         self.timerInterval = NSTimeInterval(self.slideshowDuration)
         
+        self.coverImageView.frame = self.bounds
+        self.coverImageView.backgroundColor = UIColor.blackColor()
+        self.coverImageView.userInteractionEnabled = true
+        self.coverImageView.contentMode = .ScaleAspectFill
+        self.coverImageView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        self.coverImageView.alpha = 0
+        self.insertSubview(self.coverImageView, atIndex: 0)
+        
         self.darkCoverView.frame = self.bounds
         self.darkCoverView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         self.darkCoverView.alpha = 0
@@ -132,15 +169,21 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         longPress.delegate = self
         self.addGestureRecognizer(longPress)
         
-        self.titleViewClass = KenBurnsSlideshowTitleView.self
+        for i in 0..<3 {
+            let titleViewClass = self.titleViewClass.self
+            let titleView = titleViewClass(frame: self.scrollView.bounds)
+            self.titleViews.append(titleView)
+        }
+        self.scrollView.pageItems = self.titleViews
         
-        for i in 0...2 {
+        for i in 0..<3 {
             let kenBurns = KenBurnsView(frame: self.bounds)
             NSNotificationCenter.defaultCenter().removeObserver(kenBurns)
+            kenBurns.kenBurnsEffectDuration = self.kenBurnsEffectDuration
             self.kenBurnsViews.append(kenBurns)
         }
         
-        self.updateKenBurnsViewImage()
+        self.updateKenBurnsView()
         self.layoutKenburnsViews()
         dispatch_async(dispatch_get_main_queue(), { () -> Void in self.pauseBothSideKenBurnsView() })
     }
@@ -148,10 +191,40 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     private func configureTimer() {
         self.slideshowTimer?.invalidate()
         self.slideshowTimer = nil
-        
-        self.slideshowTimer = NSTimer.scheduledTimerWithTimeInterval(self.timerInterval, target: self, selector: "showNextKenBurnsView", userInfo: nil, repeats: true)
-        
-        self.timerFiredDate = NSDate()
+        if self.slideshowEnabled {
+            self.slideshowTimer = NSTimer.scheduledTimerWithTimeInterval(self.timerInterval, target: self, selector: "showNextKenBurnsView", userInfo: nil, repeats: true)
+            
+            self.timerFiredDate = NSDate()
+        }
+    }
+    
+    func showCoverImage(#animated: Bool) {
+        let duration = NSTimeInterval(animated ? self.coverImageFadeDuration : 0)
+        UIView.animateWithDuration(duration, delay: 0, options: .BeginFromCurrentState, animations: { () -> Void in
+            self.coverImageView.alpha = 1.0
+        }, { (finished) -> Void in
+            self.isShowingCoverImage = true
+            self.currentKenBurnsView.pauseMotion()
+            self.invalidateSlideshowTimer()
+        })
+    }
+    
+    func hideCoverImage(#animated: Bool) {
+        let duration = NSTimeInterval(animated ? self.coverImageFadeDuration : 0)
+        self.currentKenBurnsView.resumeMotion()
+        self.configureTimer()
+        UIView.animateWithDuration(duration, delay: 0, options: .BeginFromCurrentState, animations: { () -> Void in
+            self.coverImageView.alpha = 0
+            }, { (finished) -> Void in
+                self.isShowingCoverImage = false
+        })
+    }
+    
+    
+    func appendImage(#image: KenBurnsSlideshowImageObject) {
+        if self.images != nil {
+            self.images!.append(image)
+        }
     }
     
     func showNextKenBurnsView() {
@@ -164,10 +237,12 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     
     func pauseCurrentKenBurnsMotion() {
         self.currentKenBurnsView.pauseMotion()
+        self.pauseSlideshowTimer()
     }
     
     func resumeCurrentKenBurnsMotion() {
         self.currentKenBurnsView.resumeMotionWithMomentDelay()
+        self.resumeSlideshowTimer()
     }
     
     private func pauseSlideshowTimer() {
@@ -193,24 +268,44 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         self.timerInterval = NSTimeInterval(self.slideshowDuration)
     }
     
+    private func updateKenBurnsView() {
+        self.currentIndex = 0
+        self.updateKenBurnsViewImage()
+        self.updateKenBurnsViewTitle()
+    }
+    
     private func updateKenBurnsViewImage() {
+        var slideEnabled = true
         if self.images != nil {
-            if self.images!.count >= 3 {
-                for (index, kenburns) in enumerate(self.kenBurnsViews) {
-                    kenburns.image = self.images![index]
-                }
-                self.scrollView.scrollEnabled = true
-            }else if self.images!.count == 2 {
-                self.kenBurnsViews[0].image = self.images![0]
-                self.kenBurnsViews[1].image = self.images![1]
-                self.kenBurnsViews[2].image = self.images![1]
-                self.scrollView.scrollEnabled = true
+            if self.images!.count >= 2 {
+                self.currentKenBurnsView.image = self.images![0].image
+                self.nextKenBurnsView.image = self.images![1].image
+                self.previousKenBurnsView.image = self.images![self.images!.count-1].image
+                slideEnabled = true
             }else if self.images!.count == 1 {
-                self.kenBurnsViews[0].image = self.images![0]
-                self.scrollView.scrollEnabled = false
+                self.currentKenBurnsView.image = self.images![0].image
+                slideEnabled = false
             }
         }else {
-            self.scrollView.scrollEnabled = false
+            slideEnabled = false
+        }
+        self.scrollView.scrollEnabled = slideEnabled
+        self.slideshowEnabled = slideEnabled
+    }
+    
+    private func updateKenBurnsViewTitle() {
+        if self.images != nil {
+            if self.images!.count >= 2 {
+                self.currentTitleView.title = self.images![0].title
+                self.currentTitleView.subTitle = self.images![0].subTitle
+                self.previousTitleView.title = self.images![self.images!.count-1].title
+                self.previousTitleView.subTitle = self.images![self.images!.count-1].subTitle
+                self.nextTitleView.title = self.images![1].title
+                self.nextTitleView.subTitle = self.images![1].subTitle
+            }else if self.images!.count == 1 {
+                self.titleViews[0].title = self.images![0].title
+                self.titleViews[0].subTitle = self.images![0].subTitle
+            }
         }
     }
     
@@ -246,6 +341,35 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         }
     }
     
+    private func updateCurrentIndex(value: Int) {
+        if self.images != nil {
+            var updatedIndex = self.currentIndex + value
+            if updatedIndex >= self.images!.count {
+                updatedIndex = 0
+            }else if updatedIndex < 0 {
+                updatedIndex = self.images!.count + value
+            }
+            
+            self.currentIndex = updatedIndex
+        }
+    }
+    
+    private func getNextIndex() -> Int {
+        var nextIndex = self.currentIndex + 1
+        if nextIndex >= self.images!.count {
+            nextIndex = 0
+        }
+        return nextIndex
+    }
+    
+    private func getPreviousIndex() -> Int {
+        var previousIndex = self.currentIndex - 1
+        if previousIndex < 0 {
+            previousIndex = self.images!.count - 1
+        }
+        return previousIndex
+    }
+    
     func scrollViewDidScroll(scrollView: UIScrollView) {
         let width = scrollView.bounds.width
         let offsetX = scrollView.contentOffset.x
@@ -275,6 +399,13 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     func infinitePageViewDidShowPreviousPage(#pageView: KenBurnsInfinitePageView) {
         let prevView = self.kenBurnsViews.removeLast()
         self.kenBurnsViews.insert(prevView, atIndex: 0)
+        let prevTitle = self.titleViews.removeLast()
+        self.titleViews.insert(prevTitle, atIndex: 0)
+        
+        self.updateCurrentIndex(-1)
+        self.previousKenBurnsView.image = self.images![self.getPreviousIndex()].image
+        self.previousTitleView.title = self.images![self.getPreviousIndex()].title
+        self.previousTitleView.subTitle = self.images![self.getPreviousIndex()].subTitle
         
         self.nextKenBurnsView.zoomImageAndRestartMotion()
         self.pauseBothSideKenBurnsView()
@@ -287,6 +418,13 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     func infinitePageViewDidShowNextPage(#pageView: KenBurnsInfinitePageView) {
         let nextView = self.kenBurnsViews.removeAtIndex(0)
         self.kenBurnsViews.append(nextView)
+        let nextTitle = self.titleViews.removeAtIndex(0)
+        self.titleViews.append(nextTitle)
+        
+        self.updateCurrentIndex(1)
+        self.nextKenBurnsView.image = self.images![self.getNextIndex()].image
+        self.nextTitleView.title = self.images![self.getNextIndex()].title
+        self.nextTitleView.subTitle = self.images![self.getNextIndex()].subTitle
         
         self.previousKenBurnsView.zoomImageAndRestartMotion()
         self.pauseBothSideKenBurnsView()
@@ -299,11 +437,21 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
+    
+    override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return !self.isShowingCoverImage
+    }
 }
 
-@objc protocol KenBurnsInfinitePageViewDelegate: UIScrollViewDelegate {
-    optional func infinitePageViewDidShowPreviousPage(#pageView: KenBurnsInfinitePageView)
-    optional func infinitePageViewDidShowNextPage(#pageView: KenBurnsInfinitePageView)
+
+
+class KenBurnsSlideshowImageObject: NSObject {
+    var image: UIImage?
+    var imageUrl: NSURL?
+    var title: NSString?
+    var subTitle: NSString?
+    var attributedTitle: NSAttributedString?
+    var attributedSUbTitle: NSAttributedString?
 }
 
 
@@ -453,6 +601,12 @@ class KenBurnsSlideshowTitleView: UIView {
 }
 
 
+
+
+@objc protocol KenBurnsInfinitePageViewDelegate: UIScrollViewDelegate {
+    optional func infinitePageViewDidShowPreviousPage(#pageView: KenBurnsInfinitePageView)
+    optional func infinitePageViewDidShowNextPage(#pageView: KenBurnsInfinitePageView)
+}
 
 internal class KenBurnsInfinitePageView: UIScrollView {
     override var frame: CGRect {

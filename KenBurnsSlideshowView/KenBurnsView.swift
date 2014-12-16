@@ -94,7 +94,7 @@ class KenBurnsView: UIView {
             self.updateMotion()
         }
     }
-    var animationDuration: CGFloat = 15.0 {
+    var kenBurnsEffectDuration: CGFloat = 15.0 {
         didSet {
             self.updateMotion()
         }
@@ -156,7 +156,7 @@ class KenBurnsView: UIView {
         let group = CAAnimationGroup()
         group.repeatCount = Float.infinity
         group.autoreverses = true
-        group.duration = CFTimeInterval(self.animationDuration)
+        group.duration = CFTimeInterval(self.kenBurnsEffectDuration)
         group.removedOnCompletion = false
         group.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
         group.animations = [transX, transY, scaleX, scaleY]
