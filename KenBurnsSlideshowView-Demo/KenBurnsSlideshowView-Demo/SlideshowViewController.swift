@@ -20,16 +20,16 @@ class SlideshowViewController: UIViewController {
     
     private func setUpSlideshow() {
         var images: [KenBurnsSlideshowImageObject] = []
-        for i in 1...15 {
-            var name = "SampleImage"
-            name += "\(i)" + ".jpg"
-            let imageObject = KenBurnsSlideshowImageObject()
-            imageObject.title = "\(name)"
-            imageObject.image = UIImage(named: name)
-            images.append(imageObject)
-            self.imageCount++
-        }
-        self.kenBurnsSlideshowView.images = images
+//        for i in 1...15 {
+//            var name = "SampleImage"
+//            name += "\(i)" + ".jpg"
+//            let imageObject = KenBurnsSlideshowImageObject()
+//            imageObject.title = "\(name)"
+//            imageObject.image = UIImage(named: name)
+//            images.append(imageObject)
+//            self.imageCount++
+//        }
+//        self.kenBurnsSlideshowView.images = images
         let duration: CGFloat = 10.0
         self.kenBurnsSlideshowView.slideshowDuration = duration
         self.kenBurnsSlideshowView.kenBurnsEffectDuration = duration
@@ -38,21 +38,16 @@ class SlideshowViewController: UIViewController {
     
     
     @IBAction func plusButton(sender: AnyObject) {
-        if self.kenBurnsSlideshowView.isShowingCoverImage {
-            self.kenBurnsSlideshowView.hideCoverImage(animated: true)
+        self.imageCount++
+        if imageCount <= 16 {
+            var name = "SampleImage"
+            name += "\(self.imageCount)" + ".jpg"
+            let imageObject = KenBurnsSlideshowImageObject()
+            imageObject.title = "\(name)"
+            imageObject.image = UIImage(named: name)
+            self.kenBurnsSlideshowView.addImage(image: imageObject)
         }else {
-            self.kenBurnsSlideshowView.showCoverImage(animated: true)
+            self.imageCount--
         }
-//        self.imageCount++
-//        if imageCount <= 16 {
-//            var name = "SampleImage"
-//            name += "\(self.imageCount)" + ".jpg"
-//            let imageObject = KenBurnsSlideshowImageObject()
-//            imageObject.title = "\(name)"
-//            imageObject.image = UIImage(named: name)
-//            self.kenBurnsSlideshowView.appendImage(image: imageObject)
-//        }else {
-//            self.imageCount--
-//        }
     }
 }
