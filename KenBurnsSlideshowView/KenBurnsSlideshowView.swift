@@ -316,15 +316,17 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     }
     
     private func asynchronousSetImage(kenBurnsView view: KenBurnsView, image: KenBurnsSlideshowImageObject) {
-        view.image = nil
         if image.image != nil {
             view.image = image.image
         }else if image.imageUrl != nil {
+            view.image = nil
             self.delegate?.kenBurnsSlideshowView?(self, downloadUrl: image.imageUrl!, completion: { (downloadedImage: UIImage) -> () in
                 if view.image == nil {
                     view.image = downloadedImage
                 }
             })
+        }else {
+            view.image = nil
         }
     }
     
