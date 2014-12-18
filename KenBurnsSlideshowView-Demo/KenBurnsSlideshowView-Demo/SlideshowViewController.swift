@@ -30,7 +30,7 @@ class SlideshowViewController: UIViewController {
 //            self.imageCount++
 //        }
 //        self.kenBurnsSlideshowView.images = images
-        let duration: CGFloat = 10.0
+        let duration: CGFloat = 5.0
         self.kenBurnsSlideshowView.slideshowDuration = duration
         self.kenBurnsSlideshowView.kenBurnsEffectDuration = duration
         self.kenBurnsSlideshowView.coverImage = UIImage(named: "SampleImage16.jpg")

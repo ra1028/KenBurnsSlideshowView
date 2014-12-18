@@ -205,7 +205,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     private func configureTimer() {
         self.slideshowTimer?.invalidate()
         self.slideshowTimer = nil
-        if self.slideshowEnabled {
+        if self.slideshowEnabled && self.allImages.count >= 2 {
             self.slideshowTimer = NSTimer.scheduledTimerWithTimeInterval(self.timerInterval, target: self, selector: "showNextKenBurnsView", userInfo: nil, repeats: true)
             
             self.timerFiredDate = NSDate()
@@ -241,13 +241,11 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         if self.currentIndex == self.getLastIndex() - 1 {
             if self.allImages.count >= 2 {
                 self.asynchronousSetImage(kenBurnsView: self.nextKenBurnsView, image: self.allImages[self.getLastIndex()])
-                self.nextTitleView.title = self.allImages[self.getNextIndex()].title
-                self.nextTitleView.subTitle = self.allImages[self.getNextIndex()].subTitle
+                self.putTitles(titleView: self.nextTitleView, image: self.allImages[self.getNextIndex()])
                 
                 if self.allImages.count == 2 {
                     self.asynchronousSetImage(kenBurnsView: self.previousKenBurnsView, image: self.allImages[self.getLastIndex()])
-                    self.previousTitleView.title = self.allImages[self.getPreviousIndex()].title
-                    self.previousTitleView.subTitle = self.allImages[self.getPreviousIndex()].subTitle
+                    self.putTitles(titleView: self.previousTitleView, image: self.allImages[self.getPreviousIndex()])
                 }
                 self.killKenBurnsViewFadeAnimation(kenBurnsView: self.previousKenBurnsView)
                 self.killKenBurnsViewFadeAnimation(kenBurnsView: self.nextKenBurnsView)
@@ -255,7 +253,12 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         }
         
         if self.allImages.count >= 2 {
+            self.timerInterval = NSTimeInterval(self.slideshowDuration) - NSDate().timeIntervalSinceDate(self.timerFiredDate)
+            if self.timerInterval < 0 {
+                self.timerInterval = NSTimeInterval(self.slideshowDuration)
+            }
             self.scrollView.scrollEnabled = true
+            self.slideshowEnabled = true
         }else if self.allImages.count == 1 {
             self.updateKenBurnsView()
         }
@@ -330,6 +333,11 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         }
     }
     
+    private func putTitles(titleView view: KenBurnsSlideshowTitleView, image: KenBurnsSlideshowImageObject) {
+        view.title = image.title
+        view.subTitle = image.subTitle
+    }
+    
     private func killKenBurnsViewFadeAnimation(kenBurnsView view: KenBurnsView) {
         view.resumeMotion()
         view.layer.removeAnimationForKey("fade")
@@ -360,15 +368,11 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     
     private func updateKenBurnsViewTitle() {
         if self.allImages.count >= 2 {
-            self.currentTitleView.title = self.allImages[0].title
-            self.currentTitleView.subTitle = self.allImages[0].subTitle
-            self.previousTitleView.title = self.allImages[self.getLastIndex()].title
-            self.previousTitleView.subTitle = self.allImages[self.getLastIndex()].subTitle
-            self.nextTitleView.title = self.allImages[1].title
-            self.nextTitleView.subTitle = self.allImages[1].subTitle
+            self.putTitles(titleView: self.currentTitleView, image: self.allImages[0])
+            self.putTitles(titleView: self.previousTitleView, image: self.allImages[self.getLastIndex()])
+            self.putTitles(titleView: self.nextTitleView, image: self.allImages[1])
         }else if self.allImages.count == 1 {
-            self.titleViews[0].title = self.allImages[0].title
-            self.titleViews[0].subTitle = self.allImages[0].subTitle
+            self.putTitles(titleView: self.currentTitleView, image: self.allImages[0])
         }
     }
     
@@ -471,8 +475,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         
         self.updateCurrentIndex(-1)
         self.asynchronousSetImage(kenBurnsView: self.previousKenBurnsView, image: self.allImages[self.getPreviousIndex()])
-        self.previousTitleView.title = self.allImages[self.getPreviousIndex()].title
-        self.previousTitleView.subTitle = self.allImages[self.getPreviousIndex()].subTitle
+        self.putTitles(titleView: self.previousTitleView, image: self.allImages[self.getPreviousIndex()])
         
         self.nextKenBurnsView.zoomImageAndRestartMotion()
         self.pauseBothSideKenBurnsView()
@@ -494,6 +497,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         self.asynchronousSetImage(kenBurnsView: self.nextKenBurnsView, image: self.allImages[self.getNextIndex()])
         self.nextTitleView.title = self.allImages[self.getNextIndex()].title
         self.nextTitleView.subTitle = self.allImages[self.getNextIndex()].subTitle
+        self.putTitles(titleView: self.nextTitleView, image: self.allImages[self.getNextIndex()])
         
         self.previousKenBurnsView.zoomImageAndRestartMotion()
         self.pauseBothSideKenBurnsView()
