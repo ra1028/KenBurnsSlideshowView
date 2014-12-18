@@ -216,8 +216,10 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         let animation = CATransition()
         animation.duration = 0.1
         animation.type = kCATransitionFade
-        self.coverImageView.image = image
-        self.coverImageView.layer.addAnimation(animation, forKey: "coverFade")
+        self.coverImageView.image = imageg
+        if animated {
+            self.coverImageView.layer.addAnimation(animation, forKey: "coverFade")
+        }
     }
     
     func showCoverImage(#animated: Bool) {
