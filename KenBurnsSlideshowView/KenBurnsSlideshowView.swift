@@ -219,7 +219,7 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         }, { (finished) -> Void in
             self.isShowingCoverImage = true
             self.currentKenBurnsView.pauseMotion()
-            self.invalidateSlideshowTimer()
+            self.pauseSlideshowTimer()
         })
     }
     
@@ -285,8 +285,10 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     }
     
     func resumeCurrentKenBurnsMotion() {
-        self.currentKenBurnsView.resumeMotionWithMomentDelay()
-        self.resumeSlideshowTimer()
+        if !self.isShowingCoverImage {
+            self.currentKenBurnsView.resumeMotionWithMomentDelay()
+            self.resumeSlideshowTimer()
+        }
     }
     
     private func pauseSlideshowTimer() {

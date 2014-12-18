@@ -255,6 +255,32 @@
                                     <action selector="plusButton:" destination="DuF-bS-3wk" eventType="touchUpInside" id="DfI-ui-sEt"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YUX-gc-CzK">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="EO1-Ki-TTC"/>
+                                    <constraint firstAttribute="width" constant="90" id="QgY-K1-NUw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="show cover">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="EO1-Ki-TTC"/>
+                                        <exclude reference="QgY-K1-NUw"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="EO1-Ki-TTC"/>
+                                        <include reference="QgY-K1-NUw"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="showCoverButton:" destination="DuF-bS-3wk" eventType="touchUpInside" id="edL-IS-m7e"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -266,6 +292,8 @@
                             <constraint firstItem="wHq-hF-38L" firstAttribute="top" secondItem="csz-Uk-0NT" secondAttribute="bottom" id="OBc-KM-h7F">
                                 <variation key="widthClass=compact" constant="100"/>
                             </constraint>
+                            <constraint firstItem="wHq-hF-38L" firstAttribute="top" secondItem="YUX-gc-CzK" secondAttribute="bottom" constant="30" id="bRa-yq-es8"/>
+                            <constraint firstAttribute="trailing" secondItem="YUX-gc-CzK" secondAttribute="trailing" constant="30" id="dHF-N8-73W"/>
                             <constraint firstAttribute="centerX" secondItem="OSy-hi-OaE" secondAttribute="centerX" constant="125" id="frf-7S-j6z">
                                 <variation key="widthClass=compact" constant="0.0"/>
                             </constraint>
@@ -275,28 +303,34 @@
                             <mask key="subviews">
                                 <exclude reference="csz-Uk-0NT"/>
                                 <exclude reference="OSy-hi-OaE"/>
+                                <exclude reference="YUX-gc-CzK"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="31l-eD-c2Z"/>
-                                <exclude reference="OBc-KM-h7F"/>
-                                <exclude reference="frf-7S-j6z"/>
                                 <exclude reference="4ZG-FJ-uaz"/>
                                 <exclude reference="8wZ-8Q-hxi"/>
                                 <exclude reference="j96-2n-89d"/>
+                                <exclude reference="frf-7S-j6z"/>
+                                <exclude reference="dHF-N8-73W"/>
+                                <exclude reference="31l-eD-c2Z"/>
+                                <exclude reference="OBc-KM-h7F"/>
+                                <exclude reference="bRa-yq-es8"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="csz-Uk-0NT"/>
                                 <include reference="OSy-hi-OaE"/>
+                                <include reference="YUX-gc-CzK"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="31l-eD-c2Z"/>
-                                <include reference="OBc-KM-h7F"/>
-                                <include reference="frf-7S-j6z"/>
                                 <include reference="4ZG-FJ-uaz"/>
                                 <include reference="8wZ-8Q-hxi"/>
                                 <include reference="j96-2n-89d"/>
+                                <include reference="frf-7S-j6z"/>
+                                <include reference="dHF-N8-73W"/>
+                                <include reference="31l-eD-c2Z"/>
+                                <include reference="OBc-KM-h7F"/>
+                                <include reference="bRa-yq-es8"/>
                             </mask>
                         </variation>
                     </view>

@@ -26,6 +26,13 @@ class SlideshowViewController: UIViewController {
         self.kenBurnsSlideshowView.coverImage = UIImage(named: "SampleImage16.jpg")
     }
     
+    @IBAction func showCoverButton(sender: UIButton) {
+        if self.kenBurnsSlideshowView.isShowingCoverImage {
+            self.kenBurnsSlideshowView.hideCoverImage(animated: true)
+        }else {
+            self.kenBurnsSlideshowView.showCoverImage(animated: true)
+        }
+    }
     
     @IBAction func plusButton(sender: AnyObject) {
         self.imageCount++
