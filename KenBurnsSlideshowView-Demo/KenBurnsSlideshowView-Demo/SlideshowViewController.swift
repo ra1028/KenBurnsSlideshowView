@@ -42,7 +42,7 @@ class SlideshowViewController: UIViewController {
             let imageObject = KenBurnsSlideshowImageObject()
             imageObject.title = "\(name)"
             imageObject.image = UIImage(named: name)
-            self.kenBurnsSlideshowView.addImage(image: imageObject)
+            self.kenBurnsSlideshowView.addImages(imageObjects: [imageObject])
         }else {
             self.imageCount--
         }

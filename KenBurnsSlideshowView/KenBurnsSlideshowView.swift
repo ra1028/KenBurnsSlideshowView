@@ -244,8 +244,9 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         })
     }
     
-    func addImage(#image: KenBurnsSlideshowImageObject) {
-        self.appendImages.append(image)
+    func addImages(#imageObjects: [KenBurnsSlideshowImageObject]!) {
+        let updatedImages = self.appendImages + imageObjects
+        self.appendImages = updatedImages
         
         if self.currentIndex == self.getLastIndex() - 1 {
             if self.allImages.count >= 2 {
