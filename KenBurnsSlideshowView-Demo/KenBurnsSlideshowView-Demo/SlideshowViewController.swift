@@ -20,17 +20,7 @@ class SlideshowViewController: UIViewController {
     
     private func setUpSlideshow() {
         var images: [KenBurnsSlideshowImageObject] = []
-//        for i in 1...15 {
-//            var name = "SampleImage"
-//            name += "\(i)" + ".jpg"
-//            let imageObject = KenBurnsSlideshowImageObject()
-//            imageObject.title = "\(name)"
-//            imageObject.image = UIImage(named: name)
-//            images.append(imageObject)
-//            self.imageCount++
-//        }
-//        self.kenBurnsSlideshowView.images = images
-        let duration: CGFloat = 5.0
+        let duration: CGFloat = 10.0
         self.kenBurnsSlideshowView.slideshowDuration = duration
         self.kenBurnsSlideshowView.kenBurnsEffectDuration = duration
         self.kenBurnsSlideshowView.coverImage = UIImage(named: "SampleImage16.jpg")
