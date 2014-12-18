@@ -212,6 +212,14 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
         }
     }
     
+    func setCoverImage(image: UIImage?, animated: Bool) {
+        let animation = CATransition()
+        animation.duration = 0.1
+        animation.type = kCATransitionFade
+        self.coverImageView.image = image
+        self.coverImageView.layer.addAnimation(animation, forKey: "coverFade")
+    }
+    
     func showCoverImage(#animated: Bool) {
         let duration = NSTimeInterval(animated ? self.coverImageFadeDuration : 0)
         UIView.animateWithDuration(duration, delay: 0, options: .BeginFromCurrentState, animations: { () -> Void in
@@ -233,7 +241,6 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
                 self.isShowingCoverImage = false
         })
     }
-    
     
     func addImage(#image: KenBurnsSlideshowImageObject) {
         self.appendImages.append(image)
