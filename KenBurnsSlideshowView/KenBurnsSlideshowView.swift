@@ -305,7 +305,9 @@ class KenBurnsSlideshowView: UIView, UIGestureRecognizerDelegate, KenBurnsInfini
     }
     
     private func resumeSlideshowTimer() {
-        self.configureTimer()
+        if !self.isShowingCoverImage {
+            self.configureTimer()
+        }
     }
     
     private func invalidateSlideshowTimer() {
